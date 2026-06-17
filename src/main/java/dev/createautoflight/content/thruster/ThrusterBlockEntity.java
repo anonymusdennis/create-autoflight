@@ -259,17 +259,23 @@ public class ThrusterBlockEntity extends SmartBlockEntity
         RandomSource random = level.random;
         int particleBudget = Math.max(1, Math.round(displayIntensity * 4));
 
+        // Spawn at the nozzle mouth (offset along the exhaust axis) and eject hard along it.
+        // LARGE_SMOKE (a rising particle) dampens its initial velocity and adds buoyancy, so a
+        // small speed reads as a gentle drift; bias the spawn and use a high ejection speed that
+        // scales with thrust intensity so the exhaust looks expelled rather than eased out.
         for (int i = 0; i < particleBudget; i++) {
-            double px = worldPosition.getX() + 0.5 + (random.nextDouble() - 0.5) * 0.12;
-            double py = worldPosition.getY() + 0.5 + (random.nextDouble() - 0.5) * 0.12;
-            double pz = worldPosition.getZ() + 0.5 + (random.nextDouble() - 0.5) * 0.12;
+            double nozzleOffset = 0.45;
+            double jitter = 0.08;
+            double px = worldPosition.getX() + 0.5 + exhaustDir.x * nozzleOffset + (random.nextDouble() - 0.5) * jitter;
+            double py = worldPosition.getY() + 0.5 + exhaustDir.y * nozzleOffset + (random.nextDouble() - 0.5) * jitter;
+            double pz = worldPosition.getZ() + 0.5 + exhaustDir.z * nozzleOffset + (random.nextDouble() - 0.5) * jitter;
 
-            double exhaustSpeed = 0.03 + displayIntensity * 0.14;
+            double exhaustSpeed = 0.6 + displayIntensity * 1.4;
             level.addParticle(
                     ParticleTypes.LARGE_SMOKE,
                     px, py, pz,
                     exhaustDir.x * exhaustSpeed,
-                    exhaustDir.y * exhaustSpeed + 0.01,
+                    exhaustDir.y * exhaustSpeed,
                     exhaustDir.z * exhaustSpeed
             );
         }
