@@ -84,6 +84,100 @@ public final class ObstaclePathChecker {
         return PathCheckResult.clear(closest == Double.MAX_VALUE ? Double.MAX_VALUE : closest);
     }
 
+    /**
+     * Lightweight, profiler-independent clearance test for an arbitrary swept capsule. The capsule
+     * radius is expected to already encode the ship hitbox, so foreign assembly blocks are tested
+     * directly against the capsule volume (no rejection-distance projection like
+     * {@link #testPath}). Used by the A* planner to validate candidate edges, where the capsule
+     * direction changes for every edge and the directional rejection cache would be invalid.
+     *
+     * @return {@code true} when nothing intersects the capsule.
+     */
+    public static boolean isCapsuleClear(
+            ServerLevel level,
+            ServerSubLevel self,
+            FlightPathCapsule capsule,
+            boolean ignoreTerrain,
+            UUID selfId
+    ) {
+        if (!ignoreTerrain && !testTerrain(level, capsule).clear()) {
+            return false;
+        }
+
+        AABB capsuleAabb = capsuleAabb(capsule);
+        BoundingBox3d query = new BoundingBox3d(
+                capsuleAabb.minX, capsuleAabb.minY, capsuleAabb.minZ,
+                capsuleAabb.maxX, capsuleAabb.maxY, capsuleAabb.maxZ
+        );
+
+        SubLevelContainer container = SubLevelContainer.getContainer(level);
+        for (SubLevel other : container.queryIntersecting(query)) {
+            if (!(other instanceof ServerSubLevel otherServer)) {
+                continue;
+            }
+            if (otherServer.getUniqueId().equals(selfId)) {
+                continue;
+            }
+            if (isAttached(otherServer, selfId)) {
+                continue;
+            }
+            if (foreignAssemblyHitsCapsule(otherServer, capsule, capsuleAabb)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean foreignAssemblyHitsCapsule(
+            ServerSubLevel otherServer,
+            FlightPathCapsule capsule,
+            AABB capsuleAabb
+    ) {
+        LevelPlot plot = otherServer.getPlot();
+        BoundingBox3ic plotBox = plot.getBoundingBox();
+        AABB assemblyAabb = foreignAssemblyAabb(otherServer, plotBox);
+        if (!assemblyAabb.intersects(capsuleAabb)) {
+            return false;
+        }
+
+        final boolean[] hit = {false};
+        PlotBlockScanner.forEachSolidBlockInBox(
+                plot,
+                plotBox.minX(), plotBox.minY(), plotBox.minZ(),
+                plotBox.maxX(), plotBox.maxY(), plotBox.maxZ(),
+                (x, y, z, state) -> {
+                    if (hit[0]) {
+                        return;
+                    }
+                    Vector3d local = new Vector3d(x + 0.5, y + 0.5, z + 0.5);
+                    Vector3d world = otherServer.logicalPose().transformPosition(local, new Vector3d());
+                    if (capsule.intersectsPoint(world.x, world.y, world.z)) {
+                        hit[0] = true;
+                    }
+                }
+        );
+        return hit[0];
+    }
+
+    private static AABB foreignAssemblyAabb(ServerSubLevel otherServer, BoundingBox3ic plotBox) {
+        Vector3d plotMin = otherServer.logicalPose().transformPosition(
+                new Vector3d(plotBox.minX(), plotBox.minY(), plotBox.minZ()),
+                new Vector3d()
+        );
+        Vector3d plotMax = otherServer.logicalPose().transformPosition(
+                new Vector3d(plotBox.maxX() + 1, plotBox.maxY() + 1, plotBox.maxZ() + 1),
+                new Vector3d()
+        );
+        return new AABB(
+                Math.min(plotMin.x, plotMax.x),
+                Math.min(plotMin.y, plotMax.y),
+                Math.min(plotMin.z, plotMax.z),
+                Math.max(plotMin.x, plotMax.x),
+                Math.max(plotMin.y, plotMax.y),
+                Math.max(plotMin.z, plotMax.z)
+        );
+    }
+
     private static PathCheckResult testForeignAssembly(
             ServerSubLevel otherServer,
             FlightPathCapsule capsule,
@@ -93,22 +187,7 @@ public final class ObstaclePathChecker {
     ) {
         LevelPlot plot = otherServer.getPlot();
         BoundingBox3ic plotBox = plot.getBoundingBox();
-        Vector3d plotMin = otherServer.logicalPose().transformPosition(
-                new Vector3d(plotBox.minX(), plotBox.minY(), plotBox.minZ()),
-                new Vector3d()
-        );
-        Vector3d plotMax = otherServer.logicalPose().transformPosition(
-                new Vector3d(plotBox.maxX() + 1, plotBox.maxY() + 1, plotBox.maxZ() + 1),
-                new Vector3d()
-        );
-        AABB assemblyAabb = new AABB(
-                Math.min(plotMin.x, plotMax.x),
-                Math.min(plotMin.y, plotMax.y),
-                Math.min(plotMin.z, plotMax.z),
-                Math.max(plotMin.x, plotMax.x),
-                Math.max(plotMin.y, plotMax.y),
-                Math.max(plotMin.z, plotMax.z)
-        );
+        AABB assemblyAabb = foreignAssemblyAabb(otherServer, plotBox);
         if (!assemblyAabb.intersects(capsuleAabb)) {
             return PathCheckResult.clear(Double.MAX_VALUE);
         }

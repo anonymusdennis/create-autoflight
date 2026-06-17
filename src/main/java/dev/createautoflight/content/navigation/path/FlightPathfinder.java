@@ -11,13 +11,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Capsule pathfinder with perpendicular dodge waypoints (borrel Pathfinder port).
+ * Capsule pathfinder with an A* graph-search primary planner and a perpendicular-dodge fallback.
+ *
+ * <p>Each replan first checks whether the swept ship capsule can fly straight to the destination.
+ * When blocked, {@link FlightAStar} searches a hitbox-inflated 3D lattice for a full route around
+ * terrain and other assemblies (handling concave/maze obstacles the single dodge cannot). Only if
+ * A* finds nothing does it fall back to the legacy perpendicular-dodge waypoint search, and finally
+ * to {@link PathfinderState#NO_WAY_FORWARD}.
  */
 public final class FlightPathfinder {
     private static final int[] DODGE_DISTANCES = {8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192};
 
     private final AssemblyShapeProfiler profiler = new AssemblyShapeProfiler();
     private final AssemblyBoundsTracker bounds = new AssemblyBoundsTracker();
+    private final FlightAStar aStar = new FlightAStar();
     private PathfinderState state = PathfinderState.PATH_CLEAR;
     private Vector3d activeWaypoint;
     private Vector3d lastDestination;
@@ -76,7 +83,9 @@ public final class FlightPathfinder {
 
         bounds.refresh(root);
         Vector3d origin = AssemblyBoundsTracker.assemblyCenterWorld(root);
-        Vector3d target = activeWaypoint != null ? activeWaypoint : destination;
+        // Always evaluate the route toward the true destination; A* re-plans the full multi-leg
+        // path each cycle rather than chasing a single persisted dodge waypoint.
+        Vector3d target = destination;
 
         double extension = bounds.frontEdgeDistance();
         float radius = approachMode ? capsuleRadiusOverride : FlightCommand.CAPSULE_RADIUS_FULL;
@@ -110,6 +119,23 @@ public final class FlightPathfinder {
             return;
         }
 
+        // Primary: full A* graph search around the obstacle, inflated by the ship hitbox radius.
+        double shipRadius = profiler.hitboxRadius(root);
+        List<Vector3d> astarPath = aStar.plan(
+                level, root, origin, destination, shipRadius, ignoreTerrain, root.getUniqueId()
+        );
+        if (astarPath != null && !astarPath.isEmpty()) {
+            activeWaypoint = new Vector3d(astarPath.get(0));
+            state = PathfinderState.ALTERNATE_PATH;
+            pathWaypoints.clear();
+            pathWaypoints.add(new Vector3d(origin));
+            for (Vector3d waypoint : astarPath) {
+                pathWaypoints.add(new Vector3d(waypoint));
+            }
+            return;
+        }
+
+        // Fallback: legacy single perpendicular-dodge waypoint search.
         Vector3d flightDir = new Vector3d(target).sub(origin);
         if (flightDir.lengthSquared() < 1e-6) {
             state = PathfinderState.NO_WAY_FORWARD;

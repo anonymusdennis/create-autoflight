@@ -108,6 +108,29 @@ public final class AssemblyShapeProfiler {
         return new FlightPathCapsule(centerWorld, p1, radius);
     }
 
+    /**
+     * Omni-directional hitbox radius: the largest distance from the assembly center to any
+     * occupied block center, plus the standard clearance margin. Unlike the directional capsule
+     * cross-section, this is a conservative bound valid for travel in <em>any</em> direction, which
+     * is what the A* planner needs since its edges fan out in all directions.
+     */
+    public double hitboxRadius(ServerSubLevel root) {
+        refreshIfNeeded(root);
+        Vector3d localCenter = AssemblyBoundsTracker.assemblyCenterLocal(root);
+        double maxSq = 0;
+        for (int i = 0; i < occupiedBlockCount; i++) {
+            int base = i * 3;
+            double dx = occupiedCoords[base] + 0.5 - localCenter.x;
+            double dy = occupiedCoords[base + 1] + 0.5 - localCenter.y;
+            double dz = occupiedCoords[base + 2] + 0.5 - localCenter.z;
+            double sq = dx * dx + dy * dy + dz * dz;
+            if (sq > maxSq) {
+                maxSq = sq;
+            }
+        }
+        return Math.sqrt(maxSq) + MARGIN;
+    }
+
     public boolean rejectionIntersects(ServerSubLevel root, double wx, double wy, double wz) {
         Vector3d local = root.logicalPose().transformPositionInverse(new Vector3d(wx, wy, wz), new Vector3d());
         Vector3d localCenter = root.logicalPose().transformPositionInverse(
