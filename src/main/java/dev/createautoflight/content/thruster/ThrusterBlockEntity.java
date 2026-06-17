@@ -64,6 +64,9 @@ public class ThrusterBlockEntity extends SmartBlockEntity
     /** Max fraction of assembly momentum removable per physics step at 400% response. */
     private static final double MAX_MOMENTUM_FRACTION = 0.5;
     private static final double NOZZLE_OFFSET = 0.45;
+    private static final double EXHAUST_SPAWN_JITTER = 0.08;
+    private static final double EXHAUST_BASE_SPEED = 0.6;
+    private static final double EXHAUST_INTENSITY_SPEED = 1.4;
     private static final double CLIENT_PHYSICS_DT = 1.0 / 20.0;
     private static final float INTENSITY_SMOOTHING = 0.2f;
     private static final float ENGAGED_INTENSITY_FLOOR = 0.12f;
@@ -264,13 +267,11 @@ public class ThrusterBlockEntity extends SmartBlockEntity
         // small speed reads as a gentle drift; bias the spawn and use a high ejection speed that
         // scales with thrust intensity so the exhaust looks expelled rather than eased out.
         for (int i = 0; i < particleBudget; i++) {
-            double nozzleOffset = 0.45;
-            double jitter = 0.08;
-            double px = worldPosition.getX() + 0.5 + exhaustDir.x * nozzleOffset + (random.nextDouble() - 0.5) * jitter;
-            double py = worldPosition.getY() + 0.5 + exhaustDir.y * nozzleOffset + (random.nextDouble() - 0.5) * jitter;
-            double pz = worldPosition.getZ() + 0.5 + exhaustDir.z * nozzleOffset + (random.nextDouble() - 0.5) * jitter;
+            double px = worldPosition.getX() + 0.5 + exhaustDir.x * NOZZLE_OFFSET + (random.nextDouble() - 0.5) * EXHAUST_SPAWN_JITTER;
+            double py = worldPosition.getY() + 0.5 + exhaustDir.y * NOZZLE_OFFSET + (random.nextDouble() - 0.5) * EXHAUST_SPAWN_JITTER;
+            double pz = worldPosition.getZ() + 0.5 + exhaustDir.z * NOZZLE_OFFSET + (random.nextDouble() - 0.5) * EXHAUST_SPAWN_JITTER;
 
-            double exhaustSpeed = 0.6 + displayIntensity * 1.4;
+            double exhaustSpeed = EXHAUST_BASE_SPEED + displayIntensity * EXHAUST_INTENSITY_SPEED;
             level.addParticle(
                     ParticleTypes.LARGE_SMOKE,
                     px, py, pz,
