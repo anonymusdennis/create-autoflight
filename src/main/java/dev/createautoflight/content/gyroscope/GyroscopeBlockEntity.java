@@ -116,6 +116,8 @@ public class GyroscopeBlockEntity extends SmartBlockEntity
             if (targetAngularVelocity.lengthSquared() > 1e-6 && ++syncTicks % 40 == 0) {
                 setChanged();
             }
+        } else {
+            tickClientAnimation();
         }
     }
 
