@@ -1,0 +1,72 @@
+package com.simibubi.create.api.data;
+
+import com.google.gson.JsonElement;
+import com.mojang.serialization.JsonOps;
+import com.simibubi.create.Create;
+import com.simibubi.create.content.trains.schedule.hat.TrainHatInfo;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.CachedOutput;
+import net.minecraft.data.DataProvider;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.PackOutput.PathProvider;
+import net.minecraft.data.PackOutput.Target;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.phys.Vec3;
+
+public abstract class TrainHatInfoProvider implements DataProvider {
+   protected final Map<ResourceLocation, TrainHatInfo> trainHatOffsets = new HashMap<>();
+   private final PathProvider path;
+
+   public TrainHatInfoProvider(PackOutput output, CompletableFuture<Provider> registries) {
+      this.path = output.createPathProvider(Target.RESOURCE_PACK, "train_hat_info");
+   }
+
+   protected abstract void createOffsets();
+
+   protected void makeInfoFor(EntityType<?> type, Vec3 offset) {
+      this.makeInfoFor(type, offset, "", 0, 1.0F);
+   }
+
+   protected void makeInfoFor(EntityType<?> type, Vec3 offset, String part) {
+      this.makeInfoFor(type, offset, part, 0, 1.0F);
+   }
+
+   protected void makeInfoFor(EntityType<?> type, Vec3 offset, float scale) {
+      this.makeInfoFor(type, offset, "", 0, scale);
+   }
+
+   protected void makeInfoFor(EntityType<?> type, Vec3 offset, String part, float scale) {
+      this.makeInfoFor(type, offset, part, 0, scale);
+   }
+
+   protected void makeInfoFor(EntityType<?> type, Vec3 offset, String part, int cubeIndex, float scale) {
+      this.trainHatOffsets.put(BuiltInRegistries.ENTITY_TYPE.getKey(type), new TrainHatInfo(part, cubeIndex, offset, scale));
+   }
+
+   public CompletableFuture<?> run(CachedOutput output) {
+      this.trainHatOffsets.clear();
+      this.createOffsets();
+      return CompletableFuture.allOf(
+         this.trainHatOffsets
+            .entrySet()
+            .stream()
+            .map(
+               entry -> DataProvider.saveStable(
+                     output,
+                     (JsonElement)TrainHatInfo.CODEC.encodeStart(JsonOps.INSTANCE, entry.getValue()).resultOrPartial(Create.LOGGER::error).orElseThrow(),
+                     this.path.json(entry.getKey())
+                  )
+            )
+            .toArray(CompletableFuture[]::new)
+      );
+   }
+
+   public String getName() {
+      return "Create Train Hat Information";
+   }
+}

@@ -1,0 +1,23 @@
+package com.simibubi.create.content.logistics.filter;
+
+import com.mojang.serialization.Codec;
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.lang.Lang;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.StringRepresentable;
+import org.jetbrains.annotations.NotNull;
+
+public enum AttributeFilterWhitelistMode implements StringRepresentable {
+   WHITELIST_DISJ,
+   WHITELIST_CONJ,
+   BLACKLIST;
+
+   public static final Codec<AttributeFilterWhitelistMode> CODEC = StringRepresentable.fromValues(AttributeFilterWhitelistMode::values);
+   public static final StreamCodec<ByteBuf, AttributeFilterWhitelistMode> STREAM_CODEC = CatnipStreamCodecBuilders.ofEnum(AttributeFilterWhitelistMode.class);
+
+   @NotNull
+   public String getSerializedName() {
+      return Lang.asId(this.name());
+   }
+}

@@ -1,0 +1,99 @@
+package dev.engine_room.flywheel.backend.engine.uniform;
+
+import dev.engine_room.flywheel.api.backend.RenderContext;
+import dev.engine_room.flywheel.backend.FlwBackendXplat;
+import dev.engine_room.flywheel.backend.mixin.AbstractClientPlayerAccessor;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.FastColor.ARGB32;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.scores.PlayerTeam;
+import org.jetbrains.annotations.Nullable;
+
+public final class PlayerUniforms extends UniformWriter {
+   private static final int SIZE = 76;
+   static final UniformBuffer BUFFER = new UniformBuffer(3, 76);
+
+   private PlayerUniforms() {
+   }
+
+   public static void update(RenderContext context) {
+      LocalPlayer player = Minecraft.getInstance().player;
+      if (player == null) {
+         BUFFER.clear();
+      } else {
+         long ptr = BUFFER.ptr();
+         PlayerInfo info = ((AbstractClientPlayerAccessor)player).flywheel$getPlayerInfo();
+         Vec3 eyePos = player.getEyePosition(context.partialTick());
+         ptr = writeVec3(ptr, (float)eyePos.x, (float)eyePos.y, (float)eyePos.z);
+         ptr = writeTeamColor(ptr, info == null ? null : info.getTeam());
+         ptr = writeEyeBrightness(ptr, player);
+         ptr = writeHeldLight(ptr, player);
+         ptr = writeEyeIn(ptr, player);
+         ptr = writeInt(ptr, player.isCrouching() ? 1 : 0);
+         ptr = writeInt(ptr, player.isSleeping() ? 1 : 0);
+         ptr = writeInt(ptr, player.isSwimming() ? 1 : 0);
+         ptr = writeInt(ptr, player.isFallFlying() ? 1 : 0);
+         ptr = writeInt(ptr, player.isShiftKeyDown() ? 1 : 0);
+         ptr = writeInt(ptr, info == null ? 0 : info.getGameMode().getId());
+         BUFFER.markDirty();
+      }
+   }
+
+   private static long writeTeamColor(long ptr, @Nullable PlayerTeam team) {
+      if (team != null) {
+         Integer color = team.getColor().getColor();
+         if (color != null) {
+            int red = ARGB32.red(color);
+            int green = ARGB32.green(color);
+            int blue = ARGB32.blue(color);
+            return writeVec4(ptr, (float)red / 255.0F, (float)green / 255.0F, (float)blue / 255.0F, 1.0F);
+         } else {
+            return writeVec4(ptr, 1.0F, 1.0F, 1.0F, 1.0F);
+         }
+      } else {
+         return writeVec4(ptr, 1.0F, 1.0F, 1.0F, 0.0F);
+      }
+   }
+
+   private static long writeEyeBrightness(long ptr, LocalPlayer player) {
+      ClientLevel level = player.clientLevel;
+      int blockBrightness = level.getBrightness(LightLayer.BLOCK, player.blockPosition());
+      int skyBrightness = level.getBrightness(LightLayer.SKY, player.blockPosition());
+      int maxBrightness = level.getMaxLightLevel();
+      return writeVec2(ptr, (float)blockBrightness / (float)maxBrightness, (float)skyBrightness / (float)maxBrightness);
+   }
+
+   private static long writeHeldLight(long ptr, LocalPlayer player) {
+      int heldLight = 0;
+
+      for (InteractionHand hand : InteractionHand.values()) {
+         Item handItem = player.getItemInHand(hand).getItem();
+         if (handItem instanceof BlockItem) {
+            BlockItem blockItem = (BlockItem)handItem;
+            Block block = blockItem.getBlock();
+            int blockLight = FlwBackendXplat.INSTANCE.getLightEmission(block.defaultBlockState(), player.clientLevel, player.blockPosition());
+            if (heldLight < blockLight) {
+               heldLight = blockLight;
+            }
+         }
+      }
+
+      return writeFloat(ptr, (float)heldLight / 15.0F);
+   }
+
+   private static long writeEyeIn(long ptr, LocalPlayer player) {
+      ClientLevel level = player.clientLevel;
+      Vec3 eyePos = player.getEyePosition();
+      BlockPos blockPos = BlockPos.containing(eyePos);
+      return writeInFluidAndBlock(ptr, level, blockPos, eyePos);
+   }
+}

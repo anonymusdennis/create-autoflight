@@ -1,0 +1,27 @@
+package dev.ryanhcode.sable.mixin.entity.entity_tracking;
+
+import dev.ryanhcode.sable.Sable;
+import dev.ryanhcode.sable.sublevel.SubLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
+
+@Mixin(
+   targets = {"net.minecraft.server.level.ChunkMap$TrackedEntity"}
+)
+public class TrackedEntityMixin {
+   @Redirect(
+      method = {"updatePlayer"},
+      at = @At(
+         value = "INVOKE",
+         target = "Lnet/minecraft/world/entity/Entity;position()Lnet/minecraft/world/phys/Vec3;"
+      )
+   )
+   private Vec3 sable$trackSubLevelEntities(Entity instance) {
+      Vec3 pos = instance.position();
+      SubLevel subLevel = Sable.HELPER.getContaining(instance.level(), pos);
+      return subLevel != null ? subLevel.logicalPose().transformPosition(pos) : instance.position();
+   }
+}

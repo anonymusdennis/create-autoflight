@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Specification-Title: Sable Companion
+Specification-Vendor: RyanHCode, Ocelot
+Specification-Version: 1.6.0
+Implementation-Title: common
+Implementation-Version: 1.6.0
+Implementation-Vendor: RyanHCode, Ocelot
+Built-On-Minecraft: 1.21.1
+

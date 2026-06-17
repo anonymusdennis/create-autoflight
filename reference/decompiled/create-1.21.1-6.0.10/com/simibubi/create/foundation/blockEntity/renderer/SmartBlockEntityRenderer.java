@@ -1,0 +1,50 @@
+package com.simibubi.create.foundation.blockEntity.renderer;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.content.redstone.link.LinkRenderer;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringRenderer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.Font.DisplayMode;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.HitResult.Type;
+import org.joml.Matrix4f;
+
+public class SmartBlockEntityRenderer<T extends SmartBlockEntity> extends SafeBlockEntityRenderer<T> {
+   public SmartBlockEntityRenderer(Context context) {
+   }
+
+   protected void renderSafe(T blockEntity, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+      FilteringRenderer.renderOnBlockEntity(blockEntity, partialTicks, ms, buffer, light, overlay);
+      LinkRenderer.renderOnBlockEntity(blockEntity, partialTicks, ms, buffer, light, overlay);
+   }
+
+   protected void renderNameplateOnHover(T blockEntity, Component tag, float yOffset, PoseStack ms, MultiBufferSource buffer, int light) {
+      Minecraft mc = Minecraft.getInstance();
+      if (!blockEntity.isVirtual()) {
+         if (!(mc.player.distanceToSqr(Vec3.atCenterOf(blockEntity.getBlockPos())) > 4096.0)) {
+            if (mc.hitResult instanceof BlockHitResult bhr && bhr.getType() != Type.MISS && bhr.getBlockPos().equals(blockEntity.getBlockPos())) {
+               float f = yOffset + 0.25F;
+               ms.pushPose();
+               ms.translate(0.5, (double)f, 0.5);
+               ms.mulPose(mc.getEntityRenderDispatcher().cameraOrientation());
+               ms.scale(0.025F, -0.025F, 0.025F);
+               Matrix4f matrix4f = ms.last().pose();
+               float f2 = Minecraft.getInstance().options.getBackgroundOpacity(0.25F);
+               int j = (int)(f2 * 255.0F) << 24;
+               Font font = mc.font;
+               float f1 = (float)(-font.width(tag) / 2);
+               font.drawInBatch(tag, f1, 0.0F, 553648127, false, matrix4f, buffer, DisplayMode.SEE_THROUGH, j, light);
+               font.drawInBatch(tag, f1, 0.0F, -1, false, matrix4f, buffer, DisplayMode.NORMAL, 0, light);
+               ms.popPose();
+               return;
+            }
+         }
+      }
+   }
+}

@@ -1,0 +1,50 @@
+package net.createmod.ponder.foundation.registration;
+
+import java.util.function.Consumer;
+import net.createmod.ponder.api.registration.MultiSceneBuilder;
+import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
+import net.createmod.ponder.api.registration.StoryBoardEntry;
+import net.createmod.ponder.api.scene.PonderStoryBoard;
+import net.minecraft.resources.ResourceLocation;
+
+public class GenericMultiSceneBuilder<T> implements MultiSceneBuilder {
+   protected Iterable<? extends T> components;
+   protected PonderSceneRegistrationHelper<T> helper;
+
+   protected GenericMultiSceneBuilder(PonderSceneRegistrationHelper<T> helper, Iterable<? extends T> components) {
+      this.helper = helper;
+      this.components = components;
+   }
+
+   @Override
+   public MultiSceneBuilder addStoryBoard(ResourceLocation schematicLocation, PonderStoryBoard storyBoard) {
+      return this.addStoryBoard(schematicLocation, storyBoard, $ -> {
+      });
+   }
+
+   @Override
+   public MultiSceneBuilder addStoryBoard(ResourceLocation schematicLocation, PonderStoryBoard storyBoard, ResourceLocation... tags) {
+      return this.addStoryBoard(schematicLocation, storyBoard, sb -> sb.highlightTags(tags));
+   }
+
+   @Override
+   public MultiSceneBuilder addStoryBoard(ResourceLocation schematicLocation, PonderStoryBoard storyBoard, Consumer<StoryBoardEntry> extras) {
+      this.components.forEach(c -> extras.accept(this.helper.addStoryBoard((T)c, schematicLocation, storyBoard)));
+      return this;
+   }
+
+   @Override
+   public MultiSceneBuilder addStoryBoard(String schematicPath, PonderStoryBoard storyBoard) {
+      return this.addStoryBoard(this.helper.asLocation(schematicPath), storyBoard);
+   }
+
+   @Override
+   public MultiSceneBuilder addStoryBoard(String schematicPath, PonderStoryBoard storyBoard, ResourceLocation... tags) {
+      return this.addStoryBoard(this.helper.asLocation(schematicPath), storyBoard, tags);
+   }
+
+   @Override
+   public MultiSceneBuilder addStoryBoard(String schematicPath, PonderStoryBoard storyBoard, Consumer<StoryBoardEntry> extras) {
+      return this.addStoryBoard(this.helper.asLocation(schematicPath), storyBoard, extras);
+   }
+}

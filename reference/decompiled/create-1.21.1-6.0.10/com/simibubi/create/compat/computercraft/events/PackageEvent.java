@@ -1,0 +1,15 @@
+package com.simibubi.create.compat.computercraft.events;
+
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
+
+public class PackageEvent implements ComputerEvent {
+   @NotNull
+   public ItemStack box;
+   public String status;
+
+   public PackageEvent(@NotNull ItemStack box, String status) {
+      this.box = box;
+      this.status = status;
+   }
+}

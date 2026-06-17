@@ -1,0 +1,15 @@
+package com.simibubi.create.compat.computercraft.events;
+
+import com.simibubi.create.content.trains.entity.Train;
+import org.jetbrains.annotations.NotNull;
+
+public class TrainPassEvent implements ComputerEvent {
+   @NotNull
+   public Train train;
+   public boolean passing;
+
+   public TrainPassEvent(@NotNull Train train, boolean passing) {
+      this.train = train;
+      this.passing = passing;
+   }
+}

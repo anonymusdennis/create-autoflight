@@ -1,0 +1,88 @@
+{
+  "mappings": {
+    "dev/engine_room/flywheel/impl/mixin/ClientChunkCacheMixin": {
+      "onLightUpdate": "Lnet/minecraft/client/multiplayer/ClientChunkCache;onLightUpdate(Lnet/minecraft/world/level/LightLayer;Lnet/minecraft/core/SectionPos;)V"
+    },
+    "dev/engine_room/flywheel/impl/mixin/LevelRendererMixin": {
+      "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V": "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V",
+      "Lnet/minecraft/world/level/lighting/LevelLightEngine;runLightUpdates()I": "Lnet/minecraft/world/level/lighting/LevelLightEngine;runLightUpdates()I",
+      "allChanged": "Lnet/minecraft/client/renderer/LevelRenderer;allChanged()V",
+      "renderEntity": "Lnet/minecraft/client/renderer/LevelRenderer;renderEntity(Lnet/minecraft/world/entity/Entity;DDDFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;)V",
+      "renderLevel": "Lnet/minecraft/client/renderer/LevelRenderer;renderLevel(Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;)V"
+    },
+    "dev/engine_room/flywheel/impl/mixin/MinecraftMixin": {
+      "<init>": "Lnet/minecraft/client/Minecraft;<init>(Lnet/minecraft/client/main/GameConfig;)V",
+      "Lnet/minecraft/server/packs/resources/ReloadableResourceManager;createReload(Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Ljava/util/concurrent/CompletableFuture;Ljava/util/List;)Lnet/minecraft/server/packs/resources/ReloadInstance;": "Lnet/minecraft/server/packs/resources/ReloadableResourceManager;createReload(Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Ljava/util/concurrent/CompletableFuture;Ljava/util/List;)Lnet/minecraft/server/packs/resources/ReloadInstance;"
+    },
+    "dev/engine_room/flywheel/impl/mixin/ModelPartAccessor": {
+      "children": "children:Ljava/util/Map;",
+      "compile": "compile(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V"
+    },
+    "dev/engine_room/flywheel/impl/mixin/PoseStackAccessor": {
+      "poseStack": "poseStack:Ljava/util/Deque;"
+    },
+    "dev/engine_room/flywheel/impl/mixin/fix/FixFabulousDepthMixin": {
+      "Lnet/minecraft/client/renderer/PostChain;process(F)V": "Lnet/minecraft/client/renderer/PostChain;process(F)V",
+      "renderLevel": "Lnet/minecraft/client/renderer/LevelRenderer;renderLevel(Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;)V"
+    },
+    "dev/engine_room/flywheel/impl/mixin/neoforge/ModelBlockRendererMixin": {
+      "net/minecraft/world/level/block/state/BlockState.getOffset(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/Vec3;": "Lnet/minecraft/world/level/block/state/BlockState;getOffset(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/Vec3;"
+    },
+    "dev/engine_room/flywheel/impl/mixin/visualmanage/BlockEntityMixin": {
+      "setRemoved()V": "Lnet/minecraft/world/level/block/entity/BlockEntity;setRemoved()V"
+    },
+    "dev/engine_room/flywheel/impl/mixin/visualmanage/LevelChunkMixin": {
+      "setBlockEntity(Lnet/minecraft/world/level/block/entity/BlockEntity;)V": "Lnet/minecraft/world/level/chunk/LevelChunk;setBlockEntity(Lnet/minecraft/world/level/block/entity/BlockEntity;)V"
+    },
+    "dev/engine_room/flywheel/impl/mixin/visualmanage/LevelRendererMixin": {
+      "setBlockDirty(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockState;)V": "Lnet/minecraft/client/renderer/LevelRenderer;setBlockDirty(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockState;)V"
+    },
+    "dev/engine_room/flywheel/impl/mixin/visualmanage/SectionCompilerMixin": {
+      "handleBlockEntity": "Lnet/minecraft/client/renderer/chunk/SectionCompiler;handleBlockEntity(Lnet/minecraft/client/renderer/chunk/SectionCompiler$Results;Lnet/minecraft/world/level/block/entity/BlockEntity;)V"
+    }
+  },
+  "data": {
+    "named:intermediary": {
+      "dev/engine_room/flywheel/impl/mixin/ClientChunkCacheMixin": {
+        "onLightUpdate": "Lnet/minecraft/client/multiplayer/ClientChunkCache;onLightUpdate(Lnet/minecraft/world/level/LightLayer;Lnet/minecraft/core/SectionPos;)V"
+      },
+      "dev/engine_room/flywheel/impl/mixin/LevelRendererMixin": {
+        "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V": "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V",
+        "Lnet/minecraft/world/level/lighting/LevelLightEngine;runLightUpdates()I": "Lnet/minecraft/world/level/lighting/LevelLightEngine;runLightUpdates()I",
+        "allChanged": "Lnet/minecraft/client/renderer/LevelRenderer;allChanged()V",
+        "renderEntity": "Lnet/minecraft/client/renderer/LevelRenderer;renderEntity(Lnet/minecraft/world/entity/Entity;DDDFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;)V",
+        "renderLevel": "Lnet/minecraft/client/renderer/LevelRenderer;renderLevel(Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;)V"
+      },
+      "dev/engine_room/flywheel/impl/mixin/MinecraftMixin": {
+        "<init>": "Lnet/minecraft/client/Minecraft;<init>(Lnet/minecraft/client/main/GameConfig;)V",
+        "Lnet/minecraft/server/packs/resources/ReloadableResourceManager;createReload(Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Ljava/util/concurrent/CompletableFuture;Ljava/util/List;)Lnet/minecraft/server/packs/resources/ReloadInstance;": "Lnet/minecraft/server/packs/resources/ReloadableResourceManager;createReload(Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Ljava/util/concurrent/CompletableFuture;Ljava/util/List;)Lnet/minecraft/server/packs/resources/ReloadInstance;"
+      },
+      "dev/engine_room/flywheel/impl/mixin/ModelPartAccessor": {
+        "children": "children:Ljava/util/Map;",
+        "compile": "compile(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V"
+      },
+      "dev/engine_room/flywheel/impl/mixin/PoseStackAccessor": {
+        "poseStack": "poseStack:Ljava/util/Deque;"
+      },
+      "dev/engine_room/flywheel/impl/mixin/fix/FixFabulousDepthMixin": {
+        "Lnet/minecraft/client/renderer/PostChain;process(F)V": "Lnet/minecraft/client/renderer/PostChain;process(F)V",
+        "renderLevel": "Lnet/minecraft/client/renderer/LevelRenderer;renderLevel(Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;)V"
+      },
+      "dev/engine_room/flywheel/impl/mixin/neoforge/ModelBlockRendererMixin": {
+        "net/minecraft/world/level/block/state/BlockState.getOffset(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/Vec3;": "Lnet/minecraft/world/level/block/state/BlockState;getOffset(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/Vec3;"
+      },
+      "dev/engine_room/flywheel/impl/mixin/visualmanage/BlockEntityMixin": {
+        "setRemoved()V": "Lnet/minecraft/world/level/block/entity/BlockEntity;setRemoved()V"
+      },
+      "dev/engine_room/flywheel/impl/mixin/visualmanage/LevelChunkMixin": {
+        "setBlockEntity(Lnet/minecraft/world/level/block/entity/BlockEntity;)V": "Lnet/minecraft/world/level/chunk/LevelChunk;setBlockEntity(Lnet/minecraft/world/level/block/entity/BlockEntity;)V"
+      },
+      "dev/engine_room/flywheel/impl/mixin/visualmanage/LevelRendererMixin": {
+        "setBlockDirty(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockState;)V": "Lnet/minecraft/client/renderer/LevelRenderer;setBlockDirty(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockState;)V"
+      },
+      "dev/engine_room/flywheel/impl/mixin/visualmanage/SectionCompilerMixin": {
+        "handleBlockEntity": "Lnet/minecraft/client/renderer/chunk/SectionCompiler;handleBlockEntity(Lnet/minecraft/client/renderer/chunk/SectionCompiler$Results;Lnet/minecraft/world/level/block/entity/BlockEntity;)V"
+      }
+    }
+  }
+}

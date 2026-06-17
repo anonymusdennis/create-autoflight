@@ -1,0 +1,14 @@
+package com.simibubi.create.content.fluids.pipes;
+
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+
+public interface IAxisPipe {
+   @Nullable
+   static Axis getAxisOf(BlockState state) {
+      return state.getBlock() instanceof IAxisPipe ? ((IAxisPipe)state.getBlock()).getAxis(state) : null;
+   }
+
+   Axis getAxis(BlockState var1);
+}

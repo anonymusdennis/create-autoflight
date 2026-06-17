@@ -1,0 +1,34 @@
+package com.simibubi.create.content.equipment.zapper.terrainzapper;
+
+import com.mojang.serialization.Codec;
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.lang.Lang;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.StringRepresentable;
+import org.jetbrains.annotations.NotNull;
+
+public enum TerrainBrushes implements StringRepresentable {
+   Cuboid(new CuboidBrush()),
+   Sphere(new SphereBrush()),
+   Cylinder(new CylinderBrush()),
+   Surface(new DynamicBrush(true)),
+   Cluster(new DynamicBrush(false));
+
+   public static final Codec<TerrainBrushes> CODEC = StringRepresentable.fromValues(TerrainBrushes::values);
+   public static final StreamCodec<ByteBuf, TerrainBrushes> STREAM_CODEC = CatnipStreamCodecBuilders.ofEnum(TerrainBrushes.class);
+   private Brush brush;
+
+   private TerrainBrushes(Brush brush) {
+      this.brush = brush;
+   }
+
+   public Brush get() {
+      return this.brush;
+   }
+
+   @NotNull
+   public String getSerializedName() {
+      return Lang.asId(this.name());
+   }
+}

@@ -1,0 +1,50 @@
+{
+  "mappings": {
+    "dev/engine_room/flywheel/backend/mixin/AbstractClientPlayerAccessor": {
+      "getPlayerInfo": "getPlayerInfo()Lnet/minecraft/client/multiplayer/PlayerInfo;"
+    },
+    "dev/engine_room/flywheel/backend/mixin/LevelRendererAccessor": {
+      "ticks": "ticks:I"
+    },
+    "dev/engine_room/flywheel/backend/mixin/OptionsMixin": {
+      "load()V": "Lnet/minecraft/client/Options;load()V",
+      "save": "Lnet/minecraft/client/Options;save()V"
+    },
+    "dev/engine_room/flywheel/backend/mixin/light/LayerLightSectionStorageAccessor": {
+      "getDataLayer": "getDataLayer(JZ)Lnet/minecraft/world/level/chunk/DataLayer;"
+    },
+    "dev/engine_room/flywheel/backend/mixin/light/LightEngineAccessor": {
+      "storage": "storage:Lnet/minecraft/world/level/lighting/LayerLightSectionStorage;"
+    },
+    "dev/engine_room/flywheel/backend/mixin/light/SkyDataLayerStorageMapAccessor": {
+      "currentLowestY": "currentLowestY:I",
+      "net.minecraft.world.level.lighting.SkyLightSectionStorage.SkyDataLayerStorageMap": "net/minecraft/world/level/lighting/SkyLightSectionStorage$SkyDataLayerStorageMap",
+      "topSections": "topSections:Lit/unimi/dsi/fastutil/longs/Long2IntOpenHashMap;"
+    }
+  },
+  "data": {
+    "named:intermediary": {
+      "dev/engine_room/flywheel/backend/mixin/AbstractClientPlayerAccessor": {
+        "getPlayerInfo": "getPlayerInfo()Lnet/minecraft/client/multiplayer/PlayerInfo;"
+      },
+      "dev/engine_room/flywheel/backend/mixin/LevelRendererAccessor": {
+        "ticks": "ticks:I"
+      },
+      "dev/engine_room/flywheel/backend/mixin/OptionsMixin": {
+        "load()V": "Lnet/minecraft/client/Options;load()V",
+        "save": "Lnet/minecraft/client/Options;save()V"
+      },
+      "dev/engine_room/flywheel/backend/mixin/light/LayerLightSectionStorageAccessor": {
+        "getDataLayer": "getDataLayer(JZ)Lnet/minecraft/world/level/chunk/DataLayer;"
+      },
+      "dev/engine_room/flywheel/backend/mixin/light/LightEngineAccessor": {
+        "storage": "storage:Lnet/minecraft/world/level/lighting/LayerLightSectionStorage;"
+      },
+      "dev/engine_room/flywheel/backend/mixin/light/SkyDataLayerStorageMapAccessor": {
+        "currentLowestY": "currentLowestY:I",
+        "net.minecraft.world.level.lighting.SkyLightSectionStorage.SkyDataLayerStorageMap": "net/minecraft/world/level/lighting/SkyLightSectionStorage$SkyDataLayerStorageMap",
+        "topSections": "topSections:Lit/unimi/dsi/fastutil/longs/Long2IntOpenHashMap;"
+      }
+    }
+  }
+}

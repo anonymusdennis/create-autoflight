@@ -1,0 +1,246 @@
+package net.createmod.catnip.platform;
+
+import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.PoseStack.Pose;
+import dev.engine_room.flywheel.lib.model.baked.EmptyVirtualBlockGetter;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+import net.createmod.catnip.client.render.model.ShadeSeparatedBufferSource;
+import net.createmod.catnip.client.render.model.ShadeSeparatedResultConsumer;
+import net.createmod.catnip.impl.client.render.model.BakedModelBuffererImpl;
+import net.createmod.catnip.platform.services.ModClientHooksHelper;
+import net.createmod.catnip.registry.RegisteredObjectsHelper;
+import net.createmod.catnip.render.ShadedBlockSbbBuilder;
+import net.createmod.catnip.theme.Color;
+import net.createmod.ponder.mixin.client.accessor.ParticleEngineAccessor;
+import net.createmod.ponder.render.NeoForgeShadedBlockSbbBuilder;
+import net.createmod.ponder.render.VirtualRenderHelper;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.neoforged.neoforge.client.RenderTypeHelper;
+import net.neoforged.neoforge.client.model.data.ModelData;
+import org.jetbrains.annotations.Nullable;
+
+public class NeoForgeClientHooksHelper implements ModClientHooksHelper {
+   private final Map<ResourceLocation, ParticleProvider<?>> particleProviders = ((ParticleEngineAccessor)Minecraft.getInstance().particleEngine)
+      .ponder$getProviders();
+
+   @Override
+   public Locale getCurrentLocale() {
+      return Minecraft.getInstance().getLanguageManager().getJavaLocale();
+   }
+
+   @Nullable
+   @Override
+   public <T extends ParticleOptions> Particle createParticleFromData(T data, ClientLevel level, double x, double y, double z, double mx, double my, double mz) {
+      ResourceLocation key = RegisteredObjectsHelper.getKeyOrThrow(data.getType());
+      ParticleProvider<T> particleProvider = (ParticleProvider<T>)this.particleProviders.get(key);
+      return particleProvider == null ? null : particleProvider.createParticle(data, level, x, y, z, mx, my, mz);
+   }
+
+   @Override
+   public Minecraft getMinecraftFromScreen(Screen screen) {
+      return screen.getMinecraft();
+   }
+
+   @Override
+   public boolean isKeyPressed(KeyMapping mapping) {
+      int keyCode = mapping.getKey().getValue();
+      long window = Minecraft.getInstance().getWindow().getWindow();
+      return InputConstants.isKeyDown(window, keyCode) && mapping.isConflictContextAndModifierActive();
+   }
+
+   @Override
+   public void enableStencilBuffer(RenderTarget renderTarget) {
+      renderTarget.enableStencil();
+   }
+
+   @Override
+   public void renderFullFluidState(PoseStack ms, BufferSource buffer, FluidState fluid) {
+      CatnipServices.FLUID_RENDERER.renderFluidBox(fluid, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, buffer, ms, 15728880, false, true);
+   }
+
+   @Override
+   public void bufferModel(
+      BakedModel model, BlockPos pos, BlockAndTintGetter level, BlockState state, @Nullable PoseStack poseStack, ShadeSeparatedBufferSource bufferSource
+   ) {
+      BakedModelBuffererImpl.bufferModel(model, pos, level, state, poseStack, bufferSource);
+   }
+
+   @Override
+   public void bufferModel(
+      BakedModel model, BlockPos pos, BlockAndTintGetter level, BlockState state, @Nullable PoseStack poseStack, ShadeSeparatedResultConsumer resultConsumer
+   ) {
+      BakedModelBuffererImpl.bufferModel(model, pos, level, state, poseStack, resultConsumer);
+   }
+
+   @Override
+   public void bufferBlocks(
+      Iterator<BlockPos> posIterator, BlockAndTintGetter level, @Nullable PoseStack poseStack, boolean renderFluids, ShadeSeparatedBufferSource bufferSource
+   ) {
+      BakedModelBuffererImpl.bufferBlocks(posIterator, level, poseStack, renderFluids, bufferSource);
+   }
+
+   @Override
+   public void bufferBlocks(
+      Iterator<BlockPos> posIterator,
+      BlockAndTintGetter level,
+      @Nullable PoseStack poseStack,
+      boolean renderFluids,
+      ShadeSeparatedResultConsumer resultConsumer
+   ) {
+      BakedModelBuffererImpl.bufferBlocks(posIterator, level, poseStack, renderFluids, resultConsumer);
+   }
+
+   @Override
+   public ShadedBlockSbbBuilder createSbbBuilder(BufferBuilder builder) {
+      return new NeoForgeShadedBlockSbbBuilder();
+   }
+
+   @Override
+   public Iterable<RenderType> getRenderTypesForBlockModel(BlockState state, RandomSource random, @Nullable BlockEntity beWithModelData) {
+      BakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(state);
+      ModelData modelData = beWithModelData != null ? beWithModelData.getModelData() : ModelData.EMPTY;
+      return model.getRenderTypes(state, random, modelData);
+   }
+
+   @Override
+   public boolean doesBlockModelContainRenderType(RenderType layer, BlockState state, RandomSource random, @Nullable BlockEntity beWithModelData) {
+      BakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(state);
+      ModelData modelData = beWithModelData != null ? beWithModelData.getModelData() : ModelData.EMPTY;
+      return model.getRenderTypes(state, random, modelData).contains(layer);
+   }
+
+   @Override
+   public void tesselateBlockVirtual(
+      BlockRenderDispatcher dispatcher,
+      BakedModel model,
+      BlockState state,
+      BlockPos pos,
+      PoseStack poseStack,
+      VertexConsumer consumer,
+      boolean checkSides,
+      RandomSource randomSource,
+      long seed,
+      int packedOverlay,
+      @Nullable RenderType renderType
+   ) {
+      ModelBlockRenderer modelRenderer = dispatcher.getModelRenderer();
+      ModelData modelData = model.getModelData(EmptyVirtualBlockGetter.FULL_DARK, pos, state, VirtualRenderHelper.VIRTUAL_DATA);
+      modelRenderer.tesselateBlock(
+         EmptyVirtualBlockGetter.FULL_DARK, model, state, pos, poseStack, consumer, checkSides, randomSource, seed, packedOverlay, modelData, renderType
+      );
+   }
+
+   @Override
+   public void tesselateBlockVirtual(
+      Level level,
+      BlockRenderDispatcher dispatcher,
+      BakedModel model,
+      BlockState state,
+      BlockPos pos,
+      PoseStack poseStack,
+      VertexConsumer consumer,
+      boolean checkSides,
+      RandomSource randomSource,
+      long seed,
+      int packedOverlay,
+      @Nullable RenderType renderType
+   ) {
+      ModelBlockRenderer modelRenderer = dispatcher.getModelRenderer();
+      BlockEntity blockEntity = level.getBlockEntity(pos);
+      ModelData modelData = model.getModelData(level, pos, state, blockEntity == null ? ModelData.EMPTY : blockEntity.getModelData());
+      modelRenderer.tesselateBlock(level, model, state, pos, poseStack, consumer, checkSides, randomSource, seed, packedOverlay, modelData, renderType);
+   }
+
+   @Override
+   public void renderGuiGameElementModel(
+      BlockRenderDispatcher blockRenderer,
+      BufferSource buffer,
+      PoseStack ms,
+      BlockState blockState,
+      BakedModel blockModel,
+      int color,
+      @Nullable BlockEntity beWithModelData
+   ) {
+      ModelData modelData = beWithModelData != null ? beWithModelData.getModelData() : VirtualRenderHelper.VIRTUAL_DATA;
+      if (blockState.getBlock() == Blocks.AIR) {
+         RenderType renderType = Sheets.translucentCullBlockSheet();
+         blockRenderer.getModelRenderer()
+            .renderModel(
+               ms.last(), buffer.getBuffer(renderType), blockState, blockModel, 1.0F, 1.0F, 1.0F, 15728880, OverlayTexture.NO_OVERLAY, modelData, null
+            );
+      } else {
+         int blockColor = Minecraft.getInstance().getBlockColors().getColor(blockState, null, null, 0);
+         Color rgb = new Color(blockColor == -1 ? color : blockColor);
+
+         for (RenderType chunkType : blockModel.getRenderTypes(blockState, RandomSource.create(42L), VirtualRenderHelper.VIRTUAL_DATA)) {
+            RenderType renderType = RenderTypeHelper.getEntityRenderType(chunkType, false);
+            blockRenderer.getModelRenderer()
+               .renderModel(
+                  ms.last(),
+                  buffer.getBuffer(renderType),
+                  blockState,
+                  blockModel,
+                  rgb.getRedAsFloat(),
+                  rgb.getGreenAsFloat(),
+                  rgb.getBlueAsFloat(),
+                  15728880,
+                  OverlayTexture.NO_OVERLAY,
+                  modelData,
+                  chunkType
+               );
+         }
+      }
+   }
+
+   @Override
+   public void renderVirtualBlockStateModel(
+      BlockRenderDispatcher dispatcher,
+      PoseStack ms,
+      VertexConsumer consumer,
+      BlockState state,
+      BakedModel model,
+      float red,
+      float green,
+      float blue,
+      RenderType layer
+   ) {
+      dispatcher.getModelRenderer()
+         .renderModel(ms.last(), consumer, state, model, red, green, blue, 15728880, OverlayTexture.NO_OVERLAY, VirtualRenderHelper.VIRTUAL_DATA, layer);
+   }
+
+   @Override
+   public void vertexConsumerPutBulkDataWithAlpha(
+      VertexConsumer consumer, Pose pose, BakedQuad quad, float red, float green, float blue, float alpha, int packedLight, int packedOverlay
+   ) {
+      consumer.putBulkData(pose, quad, red, green, blue, alpha, packedLight, packedOverlay, true);
+   }
+}

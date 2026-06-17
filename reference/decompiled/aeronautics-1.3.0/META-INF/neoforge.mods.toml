@@ -1,0 +1,54 @@
+modLoader = "javafml" #mandatory
+loaderVersion = "[4,)" #mandatory
+license = "Read attached LICENSE.md" # Review your options at https://choosealicense.com/.
+#issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/" #optional
+[[mods]] #mandatory
+modId = "aeronautics" #mandatory
+version = "1.3.0" #mandatory
+displayName = "Create Aeronautics" #mandatory
+#updateJSONURL="https://change.me.example.invalid/updates.json" #optional, see https://docs.neoforged.net/docs/misc/updatechecker/
+#displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional, displayed in the mod UI
+logoFile = "aeronautics.png" #optional
+credits = "" #optional
+authors = "Simulated Team" #optional
+description = '''Enables all manner of flying contraptions with hot air, propellers, and magic floating rocks. Typically included in an aeronautics-bundled JAR.''' #mandatory Supports multiline text
+[[mixins]]
+config = "aeronautics.mixins.json"
+[[mixins]]
+config = "aeronautics.neoforge.mixins.json"
+[[dependencies."aeronautics"]] #optional
+modId = "neoforge" #mandatory
+type = "required" #mandatory Can be one of "required", "optional", "incompatible" or "discouraged"
+versionRange = "[21.1.228,)" #mandatory
+ordering = "NONE" # The order that this dependency should load in relation to your mod, required to be either 'BEFORE' or 'AFTER' if the dependency is not mandatory
+side = "BOTH" # Side this dependency is applied on - 'BOTH', 'CLIENT' or 'SERVER'
+[[dependencies."aeronautics"]]
+modId = "minecraft"
+type = "required" #mandatory Can be one of "required", "optional", "incompatible" or "discouraged"
+versionRange = "[1.21.1]"
+ordering = "NONE"
+side = "BOTH"
+[[dependencies.aeronautics]]
+modId = "create"
+type="required" #mandatory (Can be one of "required", "optional", "incompatible" or "discouraged")
+versionRange = "[6.0.10,)"
+ordering = "NONE"
+side = "BOTH"
+[[dependencies.aeronautics]]
+modId = "sable"
+type="required" #mandatory (Can be one of "required", "optional", "incompatible" or "discouraged")
+versionRange = "[2.0.0,3.0.0)"
+ordering = "NONE"
+side = "BOTH"
+[[dependencies.aeronautics]]
+modId = "simulated"
+type="required" #mandatory (Can be one of "required", "optional", "incompatible" or "discouraged")
+versionRange = "[1.3.0,)"
+ordering = "NONE"
+side = "BOTH"
+
+# Features are specific properties of the game environment, that you may want to declare you require. This example declares
+# that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't
+# stop your mod loading on the server for example.
+#[features.aeronautics]
+#openGLVersion="[3.2,)"

@@ -1,0 +1,24 @@
+package net.createmod.ponder.foundation.instruction;
+
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.foundation.PonderScene;
+import net.minecraft.world.phys.AABB;
+
+public class ChaseAABBInstruction extends TickingInstruction {
+   private final AABB bb;
+   private final Object slot;
+   private final PonderPalette color;
+
+   public ChaseAABBInstruction(PonderPalette color, Object slot, AABB bb, int ticks) {
+      super(false, ticks);
+      this.color = color;
+      this.slot = slot;
+      this.bb = bb;
+   }
+
+   @Override
+   public void tick(PonderScene scene) {
+      super.tick(scene);
+      scene.getOutliner().chaseAABB(this.slot, this.bb).lineWidth(0.0625F).colored(this.color.getColor());
+   }
+}

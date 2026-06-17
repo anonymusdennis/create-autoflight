@@ -1,0 +1,182 @@
+package com.simibubi.create.content.trains.bogey;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllBogeyStyles;
+import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.foundation.utility.CreateLang;
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+import net.createmod.catnip.platform.CatnipServices;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.Nullable;
+
+public class BogeyStyle {
+   public final ResourceLocation id;
+   public final ResourceLocation cycleGroup;
+   public final Component displayName;
+   public final Supplier<SoundEvent> soundEvent;
+   public final ParticleOptions contactParticle;
+   public final ParticleOptions smokeParticle;
+   public final CompoundTag defaultData;
+   private final Map<BogeySizes.BogeySize, Supplier<? extends AbstractBogeyBlock<?>>> sizes;
+   @OnlyIn(Dist.CLIENT)
+   private Map<BogeySizes.BogeySize, BogeyStyle.SizeRenderer> sizeRenderers;
+
+   public BogeyStyle(
+      ResourceLocation id,
+      ResourceLocation cycleGroup,
+      Component displayName,
+      Supplier<SoundEvent> soundEvent,
+      ParticleOptions contactParticle,
+      ParticleOptions smokeParticle,
+      CompoundTag defaultData,
+      Map<BogeySizes.BogeySize, Supplier<? extends AbstractBogeyBlock<?>>> sizes,
+      Map<BogeySizes.BogeySize, Supplier<Supplier<? extends BogeyStyle.SizeRenderer>>> sizeRenderers
+   ) {
+      this.id = id;
+      this.cycleGroup = cycleGroup;
+      this.displayName = displayName;
+      this.soundEvent = soundEvent;
+      this.contactParticle = contactParticle;
+      this.smokeParticle = smokeParticle;
+      this.defaultData = defaultData;
+      this.sizes = sizes;
+      CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> {
+            this.sizeRenderers = new HashMap<>();
+            sizeRenderers.forEach((k, v) -> this.sizeRenderers.put(k, v.get().get()));
+         });
+   }
+
+   public Map<ResourceLocation, BogeyStyle> getCycleGroup() {
+      return AllBogeyStyles.getCycleGroup(this.cycleGroup);
+   }
+
+   public Set<BogeySizes.BogeySize> validSizes() {
+      return this.sizes.keySet();
+   }
+
+   public AbstractBogeyBlock<?> getBlockForSize(BogeySizes.BogeySize size) {
+      return (AbstractBogeyBlock<?>)this.sizes.get(size).get();
+   }
+
+   public AbstractBogeyBlock<?> getNextBlock(BogeySizes.BogeySize currentSize) {
+      return Stream.iterate(currentSize.nextBySize(), BogeySizes.BogeySize::nextBySize)
+         .filter(this.sizes::containsKey)
+         .findFirst()
+         .map(this::getBlockForSize)
+         .orElse(this.getBlockForSize(currentSize));
+   }
+
+   @OnlyIn(Dist.CLIENT)
+   public void render(
+      BogeySizes.BogeySize size,
+      float partialTick,
+      PoseStack poseStack,
+      MultiBufferSource buffers,
+      int light,
+      int overlay,
+      float wheelAngle,
+      @Nullable CompoundTag bogeyData,
+      boolean inContraption
+   ) {
+      if (bogeyData == null) {
+         bogeyData = new CompoundTag();
+      }
+
+      poseStack.translate(0.0, -1.5078125, 0.0);
+      BogeyStyle.SizeRenderer renderer = this.sizeRenderers.get(size);
+      if (renderer != null) {
+         renderer.renderer.render(bogeyData, wheelAngle, partialTick, poseStack, buffers, light, overlay, inContraption);
+      }
+   }
+
+   @OnlyIn(Dist.CLIENT)
+   @Nullable
+   public BogeyVisual createVisual(BogeySizes.BogeySize size, VisualizationContext ctx, float partialTick, boolean inContraption) {
+      BogeyStyle.SizeRenderer renderer = this.sizeRenderers.get(size);
+      return renderer != null ? renderer.visualizer.createVisual(ctx, partialTick, inContraption) : null;
+   }
+
+   public static class Builder {
+      protected final ResourceLocation id;
+      protected final ResourceLocation cycleGroup;
+      protected final Map<BogeySizes.BogeySize, Supplier<? extends AbstractBogeyBlock<?>>> sizes = new HashMap<>();
+      protected Component displayName = CreateLang.translateDirect("bogey.style.invalid");
+      protected Supplier<SoundEvent> soundEvent = AllSoundEvents.TRAIN2::getMainEvent;
+      protected ParticleOptions contactParticle = ParticleTypes.CRIT;
+      protected ParticleOptions smokeParticle = ParticleTypes.POOF;
+      protected CompoundTag defaultData = new CompoundTag();
+      protected final Map<BogeySizes.BogeySize, Supplier<Supplier<? extends BogeyStyle.SizeRenderer>>> sizeRenderers = new HashMap<>();
+
+      public Builder(ResourceLocation id, ResourceLocation cycleGroup) {
+         this.id = id;
+         this.cycleGroup = cycleGroup;
+      }
+
+      public BogeyStyle.Builder displayName(Component displayName) {
+         this.displayName = displayName;
+         return this;
+      }
+
+      public BogeyStyle.Builder soundEvent(Supplier<SoundEvent> soundEvent) {
+         this.soundEvent = soundEvent;
+         return this;
+      }
+
+      public BogeyStyle.Builder contactParticle(ParticleOptions contactParticle) {
+         this.contactParticle = contactParticle;
+         return this;
+      }
+
+      public BogeyStyle.Builder smokeParticle(ParticleOptions smokeParticle) {
+         this.smokeParticle = smokeParticle;
+         return this;
+      }
+
+      public BogeyStyle.Builder defaultData(CompoundTag defaultData) {
+         this.defaultData = defaultData;
+         return this;
+      }
+
+      public BogeyStyle.Builder size(
+         BogeySizes.BogeySize size, Supplier<? extends AbstractBogeyBlock<?>> block, Supplier<Supplier<? extends BogeyStyle.SizeRenderer>> renderer
+      ) {
+         this.sizes.put(size, block);
+         CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> this.sizeRenderers.put(size, renderer));
+         return this;
+      }
+
+      public BogeyStyle build() {
+         BogeyStyle entry = new BogeyStyle(
+            this.id,
+            this.cycleGroup,
+            this.displayName,
+            this.soundEvent,
+            this.contactParticle,
+            this.smokeParticle,
+            this.defaultData,
+            this.sizes,
+            this.sizeRenderers
+         );
+         AllBogeyStyles.BOGEY_STYLES.put(this.id, entry);
+         AllBogeyStyles.CYCLE_GROUPS.computeIfAbsent(this.cycleGroup, l -> new HashMap<>()).put(this.id, entry);
+         return entry;
+      }
+   }
+
+   @OnlyIn(Dist.CLIENT)
+   public static record SizeRenderer(BogeyRenderer renderer, BogeyVisualizer visualizer) {
+   }
+}

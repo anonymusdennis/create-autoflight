@@ -1,0 +1,24 @@
+package dev.simulated_team.simulated.content.entities.honey_glue;
+
+import dev.simulated_team.simulated.service.SimConfigService;
+import net.createmod.catnip.data.Pair;
+import net.minecraft.world.phys.AABB;
+
+public class HoneyGlueMaxSizing {
+   public static Pair<Boolean, String> checkBounds(AABB bb) {
+      if (checkBBMin(bb)) {
+         return Pair.of(false, "Contracted area is too small");
+      } else {
+         return checkBBMax(bb) ? Pair.of(false, "Expanded area is too large") : Pair.of(true, "");
+      }
+   }
+
+   public static boolean checkBBMin(AABB bb) {
+      return bb.getXsize() < 1.0 || bb.getYsize() < 1.0 || bb.getZsize() < 1.0;
+   }
+
+   public static boolean checkBBMax(AABB bb) {
+      int max = (Integer)SimConfigService.INSTANCE.server().assembly.honeyGlueRange.get();
+      return bb.getXsize() > (double)max || bb.getYsize() > (double)max || bb.getZsize() > (double)max;
+   }
+}

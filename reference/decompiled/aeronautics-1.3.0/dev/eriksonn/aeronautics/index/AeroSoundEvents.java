@@ -1,0 +1,118 @@
+package dev.eriksonn.aeronautics.index;
+
+import com.simibubi.create.AllSoundEvents;
+import dev.simulated_team.simulated.api.sound.SimSoundEntry;
+import dev.simulated_team.simulated.api.sound.SoundEventRegistry;
+import java.util.function.UnaryOperator;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+
+public class AeroSoundEvents {
+   public static final SoundEventRegistry REGISTRY = new SoundEventRegistry("aeronautics");
+   public static final String BLOCK_BROKEN = "subtitles.block.generic.break";
+   public static final String BLOCK_PLACED = "subtitles.block.generic.place";
+   public static final String BLOCK_HIT = "subtitles.block.generic.hit";
+   public static final String BUCKET_FILLS = "subtitles.item.bucket.fill";
+   public static final String BUCKET_EMPTIES = "subtitles.item.bucket.empty";
+   public static final SimSoundEntry ENVELOPE_BREAK = REGISTRY.create(
+      "block.envelope.break", definition -> definition.defaultSubtitle("subtitles.block.generic.break").addFileVariants("block/envelope/place", 4)
+   );
+   public static final SimSoundEntry ENVELOPE_HIT = REGISTRY.create(
+      "block.envelope.hit", definition -> definition.defaultSubtitle("subtitles.block.generic.hit").addFileVariants("block/envelope/place", 4)
+   );
+   public static final SimSoundEntry ENVELOPE_PLACE = REGISTRY.create(
+      "block.envelope.place", definition -> definition.defaultSubtitle("subtitles.block.generic.place").addFileVariants("block/envelope/place", 4)
+   );
+   public static final SimSoundEntry LEVITITE_BLEND_CRYSTALLIZE = REGISTRY.create(
+      "fluid.levitite_blend.crystallize", definition -> definition.subtitle("Levitite crystallizes").addFileVariants("fluid/levitite_blend/crystallize", 4)
+   );
+   public static final SimSoundEntry LEVITITE_BLEND_EMPTY = REGISTRY.create(
+      "fluid.levitite_blend.empty", definition -> definition.defaultSubtitle("subtitles.item.bucket.empty").addFileVariants("fluid/levitite_blend/empty", 3)
+   );
+   public static final SimSoundEntry LEVITITE_BLEND_FILL = REGISTRY.create(
+      "fluid.levitite_blend.fill", definition -> definition.defaultSubtitle("subtitles.item.bucket.fill").addFileVariants("fluid/levitite_blend/fill", 3)
+   );
+   public static final SimSoundEntry LEVITITE_BREAK = REGISTRY.create(
+      "block.levitite.break", definition -> definition.defaultSubtitle("subtitles.block.generic.break").addFileVariants("block/levitite/break", 4)
+   );
+   public static final SimSoundEntry LEVITITE_PLACE = REGISTRY.create(
+      "block.levitite.place", definition -> definition.defaultSubtitle("subtitles.block.generic.place").addFileVariants("block/levitite/place", 4)
+   );
+   public static final SimSoundEntry PROPELLER_LARGE_LOOP = REGISTRY.create(
+      "block.propeller_bearing.large_loop",
+      definition -> definition.addFileVariant("block/propeller_bearing/large_loop", sound -> sound.setAttenuationDistance(48))
+   );
+   public static final SimSoundEntry PROPELLER_SMALL_LOOP = REGISTRY.create(
+      "block.propeller_bearing.small_loop",
+      definition -> definition.addFileVariant("block/propeller_bearing/small_loop", sound -> sound.setAttenuationDistance(48))
+   );
+   public static final SimSoundEntry HOT_AIR_BURNER_HEAT = REGISTRY.create(
+      "block.hot_air_burner.head", definition -> definition.addFileVariant("block/hot_air_burner/burner_heat", sound -> sound.setAttenuationDistance(16))
+   );
+   public static final SimSoundEntry HOT_AIR_BURNER_IDLE = REGISTRY.create(
+      "block.hot_air_burner.idle", definition -> definition.addFileVariant("block/hot_air_burner/burner_idle", sound -> sound.setAttenuationDistance(8))
+   );
+   public static final SimSoundEntry STEAM_VENT_HEAT = REGISTRY.create(
+      "block.steam_vent.head", definition -> definition.addFileVariant("block/steam_vent/vent_heat", sound -> sound.setAttenuationDistance(16))
+   );
+   public static final SimSoundEntry STEAM_VENT_IDLE = REGISTRY.create(
+      "block.steam_vent.idle", definition -> definition.addFileVariant("block/steam_vent/vent_idle", sound -> sound.setAttenuationDistance(8))
+   );
+   public static final SimSoundEntry STEAM_VENT_OPEN = REGISTRY.create(
+      "block.steam_vent.open", definition -> definition.subtitle("Steam Vent whooshes").addFileVariants("block/steam_vent/open", 3)
+   );
+   public static final SimSoundEntry STEAM_VENT_CLOSE = REGISTRY.create(
+      "block.steam_vent.close", definition -> definition.subtitle("Steam Vent shuts").addEventVariant(AllSoundEvents.FROGPORT_CLOSE)
+   );
+   public static final SimSoundEntry CLOUD_SKIPPER_TRANSFORM = REGISTRY.create(
+      "item.cloud_skipper_transform",
+      SoundSource.AMBIENT,
+      definition -> definition.subtitle("Music disc transforms").addFileVariants("item/cloud_skipper_transform", 3)
+   );
+   public static final SimSoundEntry GUST = REGISTRY.create(
+      "entity.gust",
+      definition -> definition.subtitle("Balloon leaks")
+            .addEventVariant((SoundEvent)SoundEvents.WIND_CHARGE_BURST.value(), sound -> sound.setAttenuationDistance(16).setPitch(0.3F).setVolume(0.5F))
+   );
+   public static final SimSoundEntry MUSIC_DISC_CLOUD_SKIPPER = song("music_disc.cloud_skipper", "music/cloud_skipper");
+   public static final SimSoundEntry MUSIC_WINDSTREAM = song("music.adrift", "music/windstream");
+   public static final SimSoundEntry MUSIC_CIRRUS = song("music.cirrus", "music/cirrus");
+   public static final SimSoundEntry MUSIC_GLIDE = song("music.glide", "music/glide");
+   public static final SimSoundEntry MUSIC_MAMMATUS = song("music.mammatus", "music/mammatus");
+   public static final SimSoundEntry MUSIC_AIRSHIP_CLEAR = REGISTRY.create(
+      "music.clear",
+      SoundSource.MUSIC,
+      definition -> definition.addEventVariant(MUSIC_WINDSTREAM, sound -> sound.setWeight(5).setStream(true))
+            .addEventVariant(MUSIC_CIRRUS, sound -> sound.setWeight(5).setStream(true))
+            .addEventVariant(MUSIC_GLIDE, sound -> sound.setWeight(5).setStream(true))
+            .addFileVariant(mc("music/game/swamp/aerie"), UnaryOperator.identity())
+            .addFileVariant(mc("music/game/floating_dream"), UnaryOperator.identity())
+            .addFileVariant(mc("music/game/infinite_amethyst"), UnaryOperator.identity())
+            .addFileVariant(mc("music/game/echo_in_the_wind"), UnaryOperator.identity())
+            .addFileVariant(mc("music/game/clark"), UnaryOperator.identity())
+            .addFileVariant(mc("music/game/subwoofer_lullaby"), UnaryOperator.identity())
+            .addFileVariant(mc("music/game/watcher"), UnaryOperator.identity())
+   );
+   public static final SimSoundEntry MUSIC_AIRSHIP_RAIN = REGISTRY.create(
+      "music.rain",
+      SoundSource.MUSIC,
+      definition -> definition.addEventVariant(MUSIC_MAMMATUS, sound -> sound.setWeight(5).setStream(true))
+            .addEventVariant(MUSIC_WINDSTREAM, sound -> sound.setWeight(1).setStream(true))
+            .addFileVariant(mc("music/game/swamp/aerie"), UnaryOperator.identity())
+            .addFileVariant(mc("music/game/swamp/labyrinthine"), UnaryOperator.identity())
+            .addFileVariant(mc("music/game/water/axolotl"), UnaryOperator.identity())
+   );
+
+   private static ResourceLocation mc(String path) {
+      return ResourceLocation.withDefaultNamespace(path);
+   }
+
+   private static SimSoundEntry song(String id, String path) {
+      return REGISTRY.create(id, SoundSource.MUSIC, definition -> definition.addFileVariant(path, sound -> sound.setStream(true)));
+   }
+
+   public static void init() {
+   }
+}
