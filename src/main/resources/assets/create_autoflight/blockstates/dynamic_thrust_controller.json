@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "create_autoflight:block/dynamic_thrust_controller"
+    }
+  }
+}

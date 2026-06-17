@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "axis=x": { "model": "create_autoflight:block/gyroscope_base", "x": 90, "y": 90 },
+    "axis=y": { "model": "create_autoflight:block/gyroscope_base" },
+    "axis=z": { "model": "create_autoflight:block/gyroscope_base", "x": 90 }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "selector": "create_autoflight:gyroscope",
+  "properties": {
+    "sable:mass": 2.5,
+    "sable:volume": 1.0,
+    "sable:inertia": [0.4, 0.4, 0.4]
+  }
+}

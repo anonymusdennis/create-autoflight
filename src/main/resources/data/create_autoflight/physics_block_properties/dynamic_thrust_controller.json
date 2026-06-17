@@ -1,0 +1,8 @@
+{
+  "selector": "create_autoflight:dynamic_thrust_controller",
+  "properties": {
+    "sable:mass": 0.25,
+    "sable:volume": 0.25,
+    "sable:inertia": [0.05, 0.05, 0.05]
+  }
+}

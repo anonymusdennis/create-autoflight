@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "create_autoflight:block/thrust_vectoring_gearbox",
+      "uvlock": true,
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "create_autoflight:block/thrust_vectoring_gearbox",
+      "uvlock": true
+    },
+    "axis=z": {
+      "model": "create_autoflight:block/thrust_vectoring_gearbox",
+      "uvlock": true,
+      "x": 90,
+      "y": 180
+    }
+  }
+}

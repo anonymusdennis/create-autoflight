@@ -1,0 +1,25 @@
+# Gradle / NeoForge
+.gradle/
+build/
+out/
+run/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.cursor/
+
+# Local dependency jars (not redistributable — see libs/README.md)
+libs/*.jar
+
+# Accidental extracted mod contents at project root (not part of this mod)
+/assets/
+/com/
+/data/
+/dev/
+/META-INF/
+/icon.png
+/pack.mcmeta
+/create.mixins.json
+/LICENSE.md_create-*

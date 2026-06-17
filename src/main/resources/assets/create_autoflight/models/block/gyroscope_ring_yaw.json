@@ -1,0 +1,1282 @@
+{
+	"credit": "create_autoflight",
+	"textures": {
+		"glass": "minecraft:block/light_blue_stained_glass",
+		"contact": "minecraft:block/redstone_block",
+		"brass": "minecraft:block/iron_block",
+		"iron": "minecraft:block/iron_block",
+		"particle": "minecraft:block/iron_block"
+	},
+	"elements": [
+		{
+			"name": "sub_ring_yaw",
+			"from": [
+				6,
+				8,
+				14
+			],
+			"to": [
+				10,
+				9,
+				15
+			],
+			"rotation": {
+				"angle": 0,
+				"axis": "y",
+				"origin": [
+					8,
+					8.5,
+					8
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						7,
+						4,
+						11,
+						5
+					],
+					"texture": "#iron"
+				},
+				"east": {
+					"uv": [
+						2,
+						4,
+						3,
+						5
+					],
+					"texture": "#iron"
+				},
+				"south": {
+					"uv": [
+						5,
+						4,
+						9,
+						5
+					],
+					"texture": "#iron"
+				},
+				"west": {
+					"uv": [
+						13,
+						4,
+						14,
+						5
+					],
+					"texture": "#iron"
+				},
+				"up": {
+					"uv": [
+						5,
+						13,
+						9,
+						14
+					],
+					"texture": "#iron"
+				},
+				"down": {
+					"uv": [
+						5,
+						2,
+						9,
+						3
+					],
+					"texture": "#iron"
+				}
+			}
+		},
+		{
+			"name": "sub_ring_yaw",
+			"from": [
+				6,
+				8,
+				1
+			],
+			"to": [
+				10,
+				9,
+				2
+			],
+			"rotation": {
+				"angle": 0,
+				"axis": "y",
+				"origin": [
+					8,
+					8.5,
+					8
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						7,
+						4,
+						11,
+						5
+					],
+					"texture": "#iron"
+				},
+				"east": {
+					"uv": [
+						2,
+						4,
+						3,
+						5
+					],
+					"texture": "#iron"
+				},
+				"south": {
+					"uv": [
+						5,
+						4,
+						9,
+						5
+					],
+					"texture": "#iron"
+				},
+				"west": {
+					"uv": [
+						13,
+						4,
+						14,
+						5
+					],
+					"texture": "#iron"
+				},
+				"up": {
+					"uv": [
+						5,
+						13,
+						9,
+						14
+					],
+					"texture": "#iron"
+				},
+				"down": {
+					"uv": [
+						5,
+						2,
+						9,
+						3
+					],
+					"texture": "#iron"
+				}
+			}
+		},
+		{
+			"name": "sub_ring_yaw",
+			"from": [
+				6,
+				8,
+				1
+			],
+			"to": [
+				10,
+				9,
+				2
+			],
+			"rotation": {
+				"angle": 22.5,
+				"axis": "y",
+				"origin": [
+					8,
+					8.5,
+					8
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						7,
+						4,
+						11,
+						5
+					],
+					"texture": "#iron"
+				},
+				"east": {
+					"uv": [
+						2,
+						4,
+						3,
+						5
+					],
+					"texture": "#iron"
+				},
+				"south": {
+					"uv": [
+						5,
+						4,
+						9,
+						5
+					],
+					"texture": "#iron"
+				},
+				"west": {
+					"uv": [
+						13,
+						4,
+						14,
+						5
+					],
+					"texture": "#iron"
+				},
+				"up": {
+					"uv": [
+						5,
+						13,
+						9,
+						14
+					],
+					"texture": "#iron"
+				},
+				"down": {
+					"uv": [
+						5,
+						2,
+						9,
+						3
+					],
+					"texture": "#iron"
+				}
+			}
+		},
+		{
+			"name": "sub_ring_yaw",
+			"from": [
+				6,
+				8,
+				14
+			],
+			"to": [
+				10,
+				9,
+				15
+			],
+			"rotation": {
+				"angle": -22.5,
+				"axis": "y",
+				"origin": [
+					8,
+					8.5,
+					8
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						5,
+						4,
+						9,
+						5
+					],
+					"texture": "#iron"
+				},
+				"east": {
+					"uv": [
+						13,
+						4,
+						14,
+						5
+					],
+					"texture": "#iron"
+				},
+				"south": {
+					"uv": [
+						7,
+						4,
+						11,
+						5
+					],
+					"texture": "#iron"
+				},
+				"west": {
+					"uv": [
+						2,
+						4,
+						3,
+						5
+					],
+					"texture": "#iron"
+				},
+				"up": {
+					"uv": [
+						5,
+						13,
+						9,
+						14
+					],
+					"rotation": 180,
+					"texture": "#iron"
+				},
+				"down": {
+					"uv": [
+						5,
+						2,
+						9,
+						3
+					],
+					"rotation": 180,
+					"texture": "#iron"
+				}
+			}
+		},
+		{
+			"name": "sub_ring_yaw",
+			"from": [
+				1,
+				8,
+				6
+			],
+			"to": [
+				2,
+				9,
+				10
+			],
+			"rotation": {
+				"angle": 45,
+				"axis": "y",
+				"origin": [
+					8,
+					8.5,
+					8
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						2,
+						4,
+						3,
+						5
+					],
+					"texture": "#iron"
+				},
+				"east": {
+					"uv": [
+						5,
+						4,
+						9,
+						5
+					],
+					"texture": "#iron"
+				},
+				"south": {
+					"uv": [
+						13,
+						4,
+						14,
+						5
+					],
+					"texture": "#iron"
+				},
+				"west": {
+					"uv": [
+						7,
+						4,
+						11,
+						5
+					],
+					"texture": "#iron"
+				},
+				"up": {
+					"uv": [
+						5,
+						13,
+						9,
+						14
+					],
+					"rotation": 270,
+					"texture": "#iron"
+				},
+				"down": {
+					"uv": [
+						5,
+						2,
+						9,
+						3
+					],
+					"rotation": 90,
+					"texture": "#iron"
+				}
+			}
+		},
+		{
+			"name": "sub_ring_yaw",
+			"from": [
+				1,
+				8,
+				6
+			],
+			"to": [
+				2,
+				9,
+				10
+			],
+			"rotation": {
+				"angle": 22.5,
+				"axis": "y",
+				"origin": [
+					8,
+					8.5,
+					8
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						2,
+						4,
+						3,
+						5
+					],
+					"texture": "#iron"
+				},
+				"east": {
+					"uv": [
+						5,
+						4,
+						9,
+						5
+					],
+					"texture": "#iron"
+				},
+				"south": {
+					"uv": [
+						13,
+						4,
+						14,
+						5
+					],
+					"texture": "#iron"
+				},
+				"west": {
+					"uv": [
+						7,
+						4,
+						11,
+						5
+					],
+					"texture": "#iron"
+				},
+				"up": {
+					"uv": [
+						5,
+						13,
+						9,
+						14
+					],
+					"rotation": 270,
+					"texture": "#iron"
+				},
+				"down": {
+					"uv": [
+						5,
+						2,
+						9,
+						3
+					],
+					"rotation": 90,
+					"texture": "#iron"
+				}
+			}
+		},
+		{
+			"name": "sub_ring_yaw",
+			"from": [
+				6,
+				8,
+				1
+			],
+			"to": [
+				10,
+				9,
+				2
+			],
+			"rotation": {
+				"angle": -22.5,
+				"axis": "y",
+				"origin": [
+					8,
+					8.5,
+					8
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						7,
+						4,
+						11,
+						5
+					],
+					"texture": "#iron"
+				},
+				"east": {
+					"uv": [
+						2,
+						4,
+						3,
+						5
+					],
+					"texture": "#iron"
+				},
+				"south": {
+					"uv": [
+						5,
+						4,
+						9,
+						5
+					],
+					"texture": "#iron"
+				},
+				"west": {
+					"uv": [
+						13,
+						4,
+						14,
+						5
+					],
+					"texture": "#iron"
+				},
+				"up": {
+					"uv": [
+						5,
+						13,
+						9,
+						14
+					],
+					"texture": "#iron"
+				},
+				"down": {
+					"uv": [
+						5,
+						2,
+						9,
+						3
+					],
+					"texture": "#iron"
+				}
+			}
+		},
+		{
+			"name": "sub_ring_yaw",
+			"from": [
+				6,
+				8,
+				14
+			],
+			"to": [
+				10,
+				9,
+				15
+			],
+			"rotation": {
+				"angle": 22.5,
+				"axis": "y",
+				"origin": [
+					8,
+					8.5,
+					8
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						5,
+						4,
+						9,
+						5
+					],
+					"texture": "#iron"
+				},
+				"east": {
+					"uv": [
+						13,
+						4,
+						14,
+						5
+					],
+					"texture": "#iron"
+				},
+				"south": {
+					"uv": [
+						7,
+						4,
+						11,
+						5
+					],
+					"texture": "#iron"
+				},
+				"west": {
+					"uv": [
+						2,
+						4,
+						3,
+						5
+					],
+					"texture": "#iron"
+				},
+				"up": {
+					"uv": [
+						5,
+						13,
+						9,
+						14
+					],
+					"rotation": 180,
+					"texture": "#iron"
+				},
+				"down": {
+					"uv": [
+						5,
+						2,
+						9,
+						3
+					],
+					"rotation": 180,
+					"texture": "#iron"
+				}
+			}
+		},
+		{
+			"name": "sub_ring_yaw",
+			"from": [
+				6,
+				8,
+				14
+			],
+			"to": [
+				10,
+				9,
+				15
+			],
+			"rotation": {
+				"angle": 45,
+				"axis": "y",
+				"origin": [
+					8,
+					8.5,
+					8
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						5,
+						4,
+						9,
+						5
+					],
+					"texture": "#iron"
+				},
+				"east": {
+					"uv": [
+						13,
+						4,
+						14,
+						5
+					],
+					"texture": "#iron"
+				},
+				"south": {
+					"uv": [
+						7,
+						4,
+						11,
+						5
+					],
+					"texture": "#iron"
+				},
+				"west": {
+					"uv": [
+						2,
+						4,
+						3,
+						5
+					],
+					"texture": "#iron"
+				},
+				"up": {
+					"uv": [
+						5,
+						13,
+						9,
+						14
+					],
+					"rotation": 180,
+					"texture": "#iron"
+				},
+				"down": {
+					"uv": [
+						5,
+						2,
+						9,
+						3
+					],
+					"rotation": 180,
+					"texture": "#iron"
+				}
+			}
+		},
+		{
+			"name": "sub_ring_yaw",
+			"from": [
+				14,
+				8,
+				6
+			],
+			"to": [
+				15,
+				9,
+				10
+			],
+			"rotation": {
+				"angle": -22.5,
+				"axis": "y",
+				"origin": [
+					8,
+					8.5,
+					8
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						13,
+						4,
+						14,
+						5
+					],
+					"texture": "#iron"
+				},
+				"east": {
+					"uv": [
+						7,
+						4,
+						11,
+						5
+					],
+					"texture": "#iron"
+				},
+				"south": {
+					"uv": [
+						2,
+						4,
+						3,
+						5
+					],
+					"texture": "#iron"
+				},
+				"west": {
+					"uv": [
+						5,
+						4,
+						9,
+						5
+					],
+					"texture": "#iron"
+				},
+				"up": {
+					"uv": [
+						5,
+						13,
+						9,
+						14
+					],
+					"rotation": 90,
+					"texture": "#iron"
+				},
+				"down": {
+					"uv": [
+						5,
+						2,
+						9,
+						3
+					],
+					"rotation": 270,
+					"texture": "#iron"
+				}
+			}
+		},
+		{
+			"name": "sub_ring_yaw",
+			"from": [
+				14,
+				8,
+				6
+			],
+			"to": [
+				15,
+				9,
+				10
+			],
+			"rotation": {
+				"angle": 45,
+				"axis": "y",
+				"origin": [
+					8,
+					8.5,
+					8
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						13,
+						4,
+						14,
+						5
+					],
+					"texture": "#iron"
+				},
+				"east": {
+					"uv": [
+						7,
+						4,
+						11,
+						5
+					],
+					"texture": "#iron"
+				},
+				"south": {
+					"uv": [
+						2,
+						4,
+						3,
+						5
+					],
+					"texture": "#iron"
+				},
+				"west": {
+					"uv": [
+						5,
+						4,
+						9,
+						5
+					],
+					"texture": "#iron"
+				},
+				"up": {
+					"uv": [
+						5,
+						13,
+						9,
+						14
+					],
+					"rotation": 90,
+					"texture": "#iron"
+				},
+				"down": {
+					"uv": [
+						5,
+						2,
+						9,
+						3
+					],
+					"rotation": 270,
+					"texture": "#iron"
+				}
+			}
+		},
+		{
+			"name": "sub_ring_yaw",
+			"from": [
+				14,
+				8,
+				6
+			],
+			"to": [
+				15,
+				9,
+				10
+			],
+			"rotation": {
+				"angle": 22.5,
+				"axis": "y",
+				"origin": [
+					8,
+					8.5,
+					8
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						13,
+						4,
+						14,
+						5
+					],
+					"texture": "#iron"
+				},
+				"east": {
+					"uv": [
+						7,
+						4,
+						11,
+						5
+					],
+					"texture": "#iron"
+				},
+				"south": {
+					"uv": [
+						2,
+						4,
+						3,
+						5
+					],
+					"texture": "#iron"
+				},
+				"west": {
+					"uv": [
+						5,
+						4,
+						9,
+						5
+					],
+					"texture": "#iron"
+				},
+				"up": {
+					"uv": [
+						5,
+						13,
+						9,
+						14
+					],
+					"rotation": 90,
+					"texture": "#iron"
+				},
+				"down": {
+					"uv": [
+						5,
+						2,
+						9,
+						3
+					],
+					"rotation": 270,
+					"texture": "#iron"
+				}
+			}
+		},
+		{
+			"name": "sub_ring_yaw",
+			"from": [
+				6,
+				8,
+				1
+			],
+			"to": [
+				10,
+				9,
+				2
+			],
+			"rotation": {
+				"angle": 45,
+				"axis": "y",
+				"origin": [
+					8,
+					8.5,
+					8
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						7,
+						4,
+						11,
+						5
+					],
+					"texture": "#iron"
+				},
+				"east": {
+					"uv": [
+						2,
+						4,
+						3,
+						5
+					],
+					"texture": "#iron"
+				},
+				"south": {
+					"uv": [
+						5,
+						4,
+						9,
+						5
+					],
+					"texture": "#iron"
+				},
+				"west": {
+					"uv": [
+						13,
+						4,
+						14,
+						5
+					],
+					"texture": "#iron"
+				},
+				"up": {
+					"uv": [
+						5,
+						13,
+						9,
+						14
+					],
+					"texture": "#iron"
+				},
+				"down": {
+					"uv": [
+						5,
+						2,
+						9,
+						3
+					],
+					"texture": "#iron"
+				}
+			}
+		},
+		{
+			"name": "sub_ring_yaw",
+			"from": [
+				1,
+				8,
+				6
+			],
+			"to": [
+				2,
+				9,
+				10
+			],
+			"rotation": {
+				"angle": -22.5,
+				"axis": "y",
+				"origin": [
+					8,
+					8.5,
+					8
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						2,
+						4,
+						3,
+						5
+					],
+					"texture": "#iron"
+				},
+				"east": {
+					"uv": [
+						5,
+						4,
+						9,
+						5
+					],
+					"texture": "#iron"
+				},
+				"south": {
+					"uv": [
+						13,
+						4,
+						14,
+						5
+					],
+					"texture": "#iron"
+				},
+				"west": {
+					"uv": [
+						7,
+						4,
+						11,
+						5
+					],
+					"texture": "#iron"
+				},
+				"up": {
+					"uv": [
+						5,
+						13,
+						9,
+						14
+					],
+					"rotation": 270,
+					"texture": "#iron"
+				},
+				"down": {
+					"uv": [
+						5,
+						2,
+						9,
+						3
+					],
+					"rotation": 90,
+					"texture": "#iron"
+				}
+			}
+		},
+		{
+			"name": "sub_ring_yaw",
+			"from": [
+				14,
+				8,
+				6
+			],
+			"to": [
+				15,
+				9,
+				10
+			],
+			"rotation": {
+				"angle": 0,
+				"axis": "y",
+				"origin": [
+					8,
+					8.5,
+					8
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						2,
+						4,
+						3,
+						5
+					],
+					"texture": "#iron"
+				},
+				"east": {
+					"uv": [
+						5,
+						4,
+						9,
+						5
+					],
+					"texture": "#iron"
+				},
+				"south": {
+					"uv": [
+						13,
+						4,
+						14,
+						5
+					],
+					"texture": "#iron"
+				},
+				"west": {
+					"uv": [
+						7,
+						4,
+						11,
+						5
+					],
+					"texture": "#iron"
+				},
+				"up": {
+					"uv": [
+						5,
+						13,
+						9,
+						14
+					],
+					"rotation": 270,
+					"texture": "#iron"
+				},
+				"down": {
+					"uv": [
+						5,
+						2,
+						9,
+						3
+					],
+					"rotation": 90,
+					"texture": "#iron"
+				}
+			}
+		},
+		{
+			"name": "sub_ring_yaw",
+			"from": [
+				1,
+				8,
+				6
+			],
+			"to": [
+				2,
+				9,
+				10
+			],
+			"rotation": {
+				"angle": 0,
+				"axis": "y",
+				"origin": [
+					8,
+					8.5,
+					8
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						2,
+						4,
+						3,
+						5
+					],
+					"texture": "#iron"
+				},
+				"east": {
+					"uv": [
+						5,
+						4,
+						9,
+						5
+					],
+					"texture": "#iron"
+				},
+				"south": {
+					"uv": [
+						13,
+						4,
+						14,
+						5
+					],
+					"texture": "#iron"
+				},
+				"west": {
+					"uv": [
+						7,
+						4,
+						11,
+						5
+					],
+					"texture": "#iron"
+				},
+				"up": {
+					"uv": [
+						5,
+						13,
+						9,
+						14
+					],
+					"rotation": 270,
+					"texture": "#iron"
+				},
+				"down": {
+					"uv": [
+						5,
+						2,
+						9,
+						3
+					],
+					"rotation": 90,
+					"texture": "#iron"
+				}
+			}
+		}
+	]
+}

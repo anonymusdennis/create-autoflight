@@ -1,0 +1,8 @@
+{
+  "selector": "create_autoflight:navigation",
+  "properties": {
+    "sable:mass": 0.1,
+    "sable:volume": 0.5,
+    "sable:inertia": [0.04, 0.04, 0.04]
+  }
+}

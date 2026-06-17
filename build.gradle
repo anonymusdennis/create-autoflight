@@ -1,0 +1,89 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.141'
+}
+
+version = mod_version
+group = 'dev.createautoflight'
+base { archivesName = mod_id }
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(java_version as int)
+
+def libsDir = layout.projectDirectory.dir('libs')
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://maven.neoforged.net/releases' }
+    exclusiveContent {
+        forRepository {
+            maven {
+                url = 'https://maven.ryanhcode.dev/releases'
+                name = 'RyanHCode Maven'
+            }
+        }
+        filter {
+            includeGroup('dev.ryanhcode.sable')
+        }
+    }
+}
+
+dependencies {
+    compileOnly files(
+        libsDir.file('create-1.21.1-6.0.10.jar'),
+        libsDir.file('ponder.jar'),
+        libsDir.file('flywheel.jar'),
+        libsDir.file('sable-neoforge-1.21.1-2.0.1.jar'),
+        libsDir.file('sable-companion.jar'),
+        libsDir.file('simulated.jar'),
+        libsDir.file('aeronautics-1.3.0.jar')
+    )
+}
+
+neoForge {
+    version = neoforge_version
+    validateAccessTransformers = true
+
+    runs {
+        configureEach {
+            systemProperty 'neoforge.enabledGameTestNamespaces', mod_id
+            logLevel = org.slf4j.event.Level.INFO
+        }
+        client {
+            client()
+            programArguments.addAll '--username', 'AutoFlightDev'
+        }
+        server {
+            server()
+            programArguments.add '--nogui'
+        }
+    }
+
+    mods {
+        create_autoflight {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    var props = [
+        mod_id              : mod_id,
+        mod_name            : mod_name,
+        mod_version         : mod_version,
+        mod_license         : mod_license,
+        mod_authors         : mod_authors,
+        mod_description     : mod_description,
+        java_version        : java_version,
+        loader_version_range: loader_version_range,
+        neoforge_version_range: neoforge_version_range,
+        mc_version_range    : mc_version_range
+    ]
+    inputs.properties props
+    filesMatching(['META-INF/neoforge.mods.toml', 'pack.mcmeta']) {
+        expand props
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
