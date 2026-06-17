@@ -320,7 +320,7 @@ public final class AssemblyFlightController {
                 : null;
 
         GyroTargetAngles currentAngles = GyroTargetAngles.measureAttitude(root.logicalPose().orientation());
-        GyroTargetAngles targetAngles = command.helicopterAssist()
+        GyroTargetAngles targetAngles = command.navActive()
                 ? command.gyroTargetAngles()
                 : GyroTargetAngles.ZERO;
 
@@ -388,15 +388,18 @@ public final class AssemblyFlightController {
         Quaterniond orientation = desiredOrientation(root, flightTarget, phase, settings, distToDest);
         Vector3d center = AssemblyBoundsTracker.assemblyCenterWorld(root);
         GyroTargetAngles currentAttitude = GyroTargetAngles.fromOrientation(root.logicalPose().orientation());
-        GyroTargetAngles gyroTargets = settings.isHelicopterMode() && phase != ApproachPhase.DOCKED
-                ? NavigationKinematics.helicopterTargetAngles(
-                        center, flightTarget, settings.getHelicopterMaxPitchDeg(), settings.isInvertAngle(),
-                        distToDest, settings.getArrivalRadius(),
-                        currentAttitude.rollDeg(), currentAttitude.yawDeg())
-                : GyroTargetAngles.ZERO;
-        orientation = settings.isHelicopterMode() && phase != ApproachPhase.DOCKED
-                ? NavigationKinematics.orientationFromLevelAttitude(gyroTargets)
-                : orientation;
+        boolean heliAttitude = settings.isHelicopterMode() && phase != ApproachPhase.DOCKED;
+        if (heliAttitude) {
+            // Helicopter mode: derive level-flight attitude, then build the orientation from it.
+            GyroTargetAngles heliTargets = NavigationKinematics.helicopterTargetAngles(
+                    center, flightTarget, settings.getHelicopterMaxPitchDeg(), settings.isInvertAngle(),
+                    distToDest, settings.getArrivalRadius(),
+                    currentAttitude.rollDeg(), currentAttitude.yawDeg());
+            orientation = NavigationKinematics.orientationFromLevelAttitude(heliTargets);
+        }
+        // In every nav mode (not just helicopter) publish real gyro targets that mirror the
+        // desired orientation, so the gyro stabilizes pitch/roll/heading instead of receiving ZERO.
+        GyroTargetAngles gyroTargets = GyroTargetAngles.measureAttitude(orientation);
         return new FlightCommand(
                 desiredVel,
                 orientation,

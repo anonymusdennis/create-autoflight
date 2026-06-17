@@ -32,26 +32,36 @@ public final class NavigationKinematics {
         Vector3d dir = new Vector3d(toTarget).div(dist);
         Quaterniond orientation = new Quaterniond(root.logicalPose().orientation());
 
+        // Body axes in world space.
         Vector3d forward = orientation.transform(new Vector3d(0, 0, 1), new Vector3d()).normalize();
         Vector3d up = orientation.transform(new Vector3d(0, 1, 0), new Vector3d()).normalize();
+        Vector3d right = orientation.transform(new Vector3d(1, 0, 0), new Vector3d()).normalize();
 
-        double yaw = Math.atan2(
-                forward.x * dir.z - forward.z * dir.x,
-                forward.x * dir.x + forward.z * dir.z
-        );
-        Vector3d flatForward = new Vector3d(forward.x, 0, forward.z);
-        Vector3d flatDir = new Vector3d(dir.x, 0, dir.z);
-        if (flatForward.lengthSquared() > 1e-6 && flatDir.lengthSquared() > 1e-6) {
-            flatForward.normalize();
-            flatDir.normalize();
-            yaw = Math.atan2(
-                    flatForward.x * flatDir.z - flatForward.z * flatDir.x,
-                    flatForward.x * flatDir.x + flatForward.z * flatDir.z
-            );
+        // Decompose the world-space direction to the target into the body frame so that yaw and
+        // pitch stay consistent even when the craft is banked or already pitched. Using the body
+        // axes (rather than overwriting a 3D yaw with a world-flattened 2D value, and rather than
+        // measuring pitch against world-up) keeps the two angles in the same reference frame.
+        double f = dir.dot(forward);
+        double r = dir.dot(right);
+        double u = dir.dot(up);
+
+        // Body-relative heading: rotation about the body up-axis needed to face the target.
+        double yaw = Math.atan2(r, f);
+        // Body-relative elevation, nose-down positive (matching GyroTargetAngles convention).
+        double pitch = Math.atan2(-u, Math.hypot(f, r));
+
+        // Guard against NaN propagating from a degenerate orientation/direction (e.g. a
+        // zero-length or non-normalizable pose); atan2 above is otherwise always finite.
+        if (!Double.isFinite(yaw)) {
+            yaw = 0.0;
+        }
+        if (!Double.isFinite(pitch)) {
+            pitch = 0.0;
         }
 
-        double pitch = Math.asin(Math.clamp(-dir.dot(up), -1, 1));
-        double headingError = alignmentAngle(forward, dir);
+        // Stop-and-rotate is driven by heading (yaw) misalignment about the up-axis. A purely
+        // vertical target therefore does not deadlock the craft into an unreachable "rotate" state.
+        double headingError = Math.abs(yaw);
 
         return new KinematicsResult(
                 dist,
@@ -266,9 +276,4 @@ public final class NavigationKinematics {
         return new Quaterniond().setFromNormalized(m);
     }
 
-    private static double alignmentAngle(Vector3d currentDir, Vector3d targetDir) {
-        double cos = Math.clamp(currentDir.dot(targetDir), -1.0, 1.0);
-        double sin = currentDir.cross(targetDir, new Vector3d()).length();
-        return Math.atan2(sin, cos);
-    }
 }

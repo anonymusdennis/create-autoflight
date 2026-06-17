@@ -290,7 +290,7 @@ public class GyroscopeBlockEntity extends SmartBlockEntity
     }
 
     private GyroTargetAngles resolveEulerTarget(FlightCommand navCommand) {
-        if (navCommand.navActive() && navCommand.helicopterAssist()) {
+        if (navCommand.navActive()) {
             GyroTargetAngles nav = navCommand.gyroTargetAngles();
             syncNavTargetsToDisplay(nav);
             if (!navTargetOverride) {
@@ -323,8 +323,11 @@ public class GyroscopeBlockEntity extends SmartBlockEntity
             FlightCommand navCommand,
             GyroTargetAngles eulerTarget
     ) {
-        if (navCommand.navActive() && navCommand.helicopterAssist()) {
-            return NavigationKinematics.orientationFromLevelAttitude(navCommand.gyroTargetAngles());
+        if (navCommand.navActive()) {
+            // Follow the navigator's desired orientation directly in every nav mode. This field
+            // carries the full target attitude; in helicopter mode it equals the level-attitude
+            // orientation built from the gyro targets, so heli behavior is preserved.
+            return new Quaterniond(navCommand.desiredOrientation());
         }
         if (eulerTarget.pitchDeg() == 0.0
                 && eulerTarget.yawDeg() == 0.0
