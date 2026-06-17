@@ -17,7 +17,10 @@ import org.joml.Vector3d;
 import java.util.UUID;
 
 public final class ObstaclePathChecker {
-    private static final double SAMPLE_SPACING = 2.0;
+    // Sub-block spacing: a coarser step skips thin walls that fall between two centerline
+    // samples, letting the craft clip straight through them. Half-block steps guarantee the
+    // block containing every point along the path centerline is tested.
+    private static final double SAMPLE_SPACING = 0.5;
 
     private ObstaclePathChecker() {}
 
