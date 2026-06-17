@@ -50,6 +50,8 @@ public final class NavigationKinematics {
         // Body-relative elevation, nose-down positive (matching GyroTargetAngles convention).
         double pitch = Math.atan2(-u, Math.hypot(f, r));
 
+        // Guard against NaN propagating from a degenerate orientation/direction (e.g. a
+        // zero-length or non-normalizable pose); atan2 above is otherwise always finite.
         if (!Double.isFinite(yaw)) {
             yaw = 0.0;
         }
